@@ -2,6 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Thiago Barradas</Authors>
+    <PackageLicenseUrl>https://github.com/ThiagoBarradas/mongo-crud-dotnet/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/ThiagoBarradas/mongo-crud-dotnet</PackageProjectUrl>
+    <PackageIconUrl>https://i.imgur.com/ZdvovHh.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/ThiagoBarradas/mongo-crud-dotnet</RepositoryUrl>
+    <PackageTags>mongo mongodb crud create insert update delete query search get easy fast high level</PackageTags>
+    <Copyright>Ⓒ Thiago Barradas</Copyright>
+    <Description>MongoCRUD is a high level library to make easy basic operations like create, update, update partial by query, upsert, delete, delete by query, get, search with paging and sorting, and filter buiders.</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Attributes\**" />
+    <EmbeddedResource Remove="Attributes\**" />
+    <None Remove="Attributes\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.7.0" />
+  </ItemGroup>
 
 </Project>
