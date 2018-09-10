@@ -15,7 +15,7 @@ Sample Entity Class
 
 public class MyEntity
 {
-    [BsonId]
+	[BsonId]
 	public string MyId { get; set; }
 
 	public string SomeProperty { get; set; }
