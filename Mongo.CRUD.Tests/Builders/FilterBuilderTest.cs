@@ -9,13 +9,13 @@ using Xunit;
 
 namespace Mongo.CRUD.Tests.Builders
 {
-    public class FilterBuilderTest
+    public static class FilterBuilderTest
     {
         [Fact]
-        public void WithSorting_By_Asc()
+        public static void WithSorting_By_Asc()
         {
             // arrange
-            SearchOptions options = new SearchOptions()
+            SearchOptions options = new SearchOptions
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -37,10 +37,10 @@ namespace Mongo.CRUD.Tests.Builders
         }
 
         [Fact]
-        public void WithSorting_By_Desc()
+        public static void WithSorting_By_Desc()
         {
             // arrange
-            SearchOptions options = new SearchOptions()
+            SearchOptions options = new SearchOptions
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -62,10 +62,10 @@ namespace Mongo.CRUD.Tests.Builders
         }
 
         [Fact]
-        public void WithSorting_With_Empty_Field()
+        public static void WithSorting_With_Empty_Field()
         {
             // arrange
-            SearchOptions options = new SearchOptions()
+            SearchOptions options = new SearchOptions
             {
                 PageNumber = 1,
                 PageSize = 10,
@@ -85,10 +85,10 @@ namespace Mongo.CRUD.Tests.Builders
         }
 
         [Fact]
-        public void WithPaging_Calculated()
+        public static void WithPaging_Calculated()
         {
             // arrange
-            SearchOptions options = new SearchOptions()
+            SearchOptions options = new SearchOptions
             {
                 PageNumber = 4,
                 PageSize = 6,
@@ -111,21 +111,21 @@ namespace Mongo.CRUD.Tests.Builders
         }
 
         [Fact]
-        public void Join_Should_Return_Null_When_Both_Filters_Are_Null()
+        public static void Join_Should_Return_Null_When_Both_Filters_Are_Null()
         {
             // arrange
             FilterDefinition<SomeClass> filter1 = null;
             FilterDefinition<SomeClass> filter2 = null;
 
             // act
-            var result = filter1.Join(filter2);
+            var result = filter1?.Join(filter2);
 
             // assert
             Assert.Null(result);
         }
 
         [Fact]
-        public void Join_Should_Return_First_Filter_When_Second_Filter_Is_Null()
+        public static void Join_Should_Return_First_Filter_When_Second_Filter_Is_Null()
         {
             // arrange
             var builder = FilterBuilder.GetFilterBuilder<SomeClass>();
@@ -136,19 +136,19 @@ namespace Mongo.CRUD.Tests.Builders
             FilterDefinition<SomeClass> filter2 = null;
 
             // act
-            var result = filter1.Join(filter2);
+            var result = filter1?.Join(filter2);
 
             // assert
             var rendered = result?.Render(documentSerializer, serializerRegistry);
             Assert.NotNull(result);
             Assert.NotNull(rendered);
             Assert.Single(rendered);
-            Assert.Equal("OtherProperty", rendered.First().Name);
-            Assert.Equal("somevalue", rendered.First().Value);
+            Assert.Equal("OtherProperty", rendered?.FirstOrDefault().Name);
+            Assert.Equal("somevalue", rendered?.FirstOrDefault().Value);
         }
 
         [Fact]
-        public void Join_Should_Return_Second_Filter_When_First_Filter_Is_Null()
+        public static void Join_Should_Return_Second_Filter_When_First_Filter_Is_Null()
         {
             // arrange
             var builder = FilterBuilder.GetFilterBuilder<SomeClass>();
@@ -159,19 +159,19 @@ namespace Mongo.CRUD.Tests.Builders
             FilterDefinition<SomeClass> filter2 = builder.Eq(r => r.SomeProperty, "value");
 
             // act
-            var result = filter1.Join(filter2);
+            var result = FilterBuilder.Join(filter1, filter2);
 
             // assert
             var rendered = result?.Render(documentSerializer, serializerRegistry);
             Assert.NotNull(result);
             Assert.NotNull(rendered);
             Assert.Single(rendered);
-            Assert.Equal("SomeProperty", rendered.First().Name);
-            Assert.Equal("value", rendered.First().Value);
+            Assert.Equal("SomeProperty", rendered?.FirstOrDefault().Name);
+            Assert.Equal("value", rendered?.FirstOrDefault().Value);
         }
 
         [Fact]
-        public void Join_Should_Return_And_Operation_With_Two_Filters()
+        public static void Join_Should_Return_And_Operation_With_Two_Filters()
         {
             // arrange
             var builder = FilterBuilder.GetFilterBuilder<SomeClass>();
@@ -182,24 +182,24 @@ namespace Mongo.CRUD.Tests.Builders
             FilterDefinition<SomeClass> filter2 = builder.Eq(r => r.SomeProperty, "value");
 
             // act
-            var result = filter1.Join(filter2);
+            var result = filter1?.Join(filter2);
 
             // assert
             var rendered = result?.Render(documentSerializer, serializerRegistry);
             var renderedString = rendered.ToString();
             Assert.NotNull(result);
             Assert.NotNull(rendered);
-            Assert.Equal(2, rendered.Count());
+            Assert.Equal(2, rendered?.Count());
             Assert.Equal(
                 "{ \"OtherProperty\" : \"somevalue\", \"SomeProperty\" : \"value\" }", 
                 renderedString);
-            Assert.Equal("somevalue", rendered.First().Value);
-            Assert.Equal("SomeProperty", rendered.Last().Name);
-            Assert.Equal("value", rendered.Last().Value);
+            Assert.Equal("somevalue", rendered?.FirstOrDefault().Value);
+            Assert.Equal("SomeProperty", rendered?.LastOrDefault().Name);
+            Assert.Equal("value", rendered?.LastOrDefault().Value);
         }
 
         [Fact]
-        public void Join_Should_Return_Or_Operation_With_Two_Filters()
+        public static void Join_Should_Return_Or_Operation_With_Two_Filters()
         {
             // arrange
             var builder = FilterBuilder.GetFilterBuilder<SomeClass>();
@@ -210,7 +210,7 @@ namespace Mongo.CRUD.Tests.Builders
             FilterDefinition<SomeClass> filter2 = builder.Eq(r => r.SomeProperty, "value");
 
             // act
-            var result = filter1.Join(filter2, Operator.Or);
+            var result = filter1?.Join(filter2, Operator.Or);
 
             // assert
             var rendered = result?.Render(documentSerializer, serializerRegistry);

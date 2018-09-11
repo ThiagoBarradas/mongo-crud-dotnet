@@ -13,17 +13,17 @@ using Xunit;
 
 namespace Mongo.CRUD.Tests
 {
-    public class MongoCRUDTest
+    public static class MongoCRUDTest
     {
         [Fact]
-        public void RegisterDefaultConventionPack_Should_Register_Custom_ConventionPack()
+        public static void RegisterDefaultConventionPack_Should_Register_Custom_ConventionPack()
         {
             // arrange & act (register)
             MongoCRUD.RegisterDefaultConventionPack(t => t == typeof(ConventionPackTestClass));
             var serializerRegistry = BsonSerializer.SerializerRegistry;
             var documentSerializer = serializerRegistry.GetSerializer<ConventionPackTestClass>();
             var builder = FilterBuilder.GetFilterBuilder<ConventionPackTestClass>();
-            var myTest = new ConventionPackTestClass()
+            var myTest = new ConventionPackTestClass
             {
                 MyGuid = Guid.NewGuid(),
                 MyTest = ConventionPackTestEnum.Test2
@@ -39,17 +39,17 @@ namespace Mongo.CRUD.Tests
             // assert
             Assert.NotNull(rendered1);
             Assert.Single(rendered1);
-            Assert.Equal("myGuid", rendered1.First().Name);
-            Assert.True(rendered1.First().Value.IsString);
+            Assert.Equal("myGuid", rendered1?.FirstOrDefault().Name);
+            Assert.True(rendered1?.FirstOrDefault().Value.IsString);
 
             Assert.NotNull(rendered2);
             Assert.Single(rendered2);
-            Assert.Equal("myTest", rendered2.First().Name);
-            Assert.Equal(myTest.MyTest.ToString(), rendered2.First().Value);
+            Assert.Equal("myTest", rendered2?.FirstOrDefault().Name);
+            Assert.Equal(myTest.MyTest.ToString(), rendered2?.FirstOrDefault().Value);
         }
 
         [Fact]
-        public void Contructor_Empty_Should_Return_An_Instance_Without_MongoClient_Instance()
+        public static void Contructor_Empty_Should_Return_An_Instance_Without_MongoClient_Instance()
         {
             // arrange & act
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>();
@@ -59,7 +59,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoClient_Should_Throw_Exception_When_MongoClient_Is_Null()
+        public static void Contructor_With_MongoClient_Should_Throw_Exception_When_MongoClient_Is_Null()
         {
             // arrange
             IMongoClient client = null;
@@ -76,7 +76,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoClient_Should_Throw_Exception_When_Database_Is_Null()
+        public static void Contructor_With_MongoClient_Should_Throw_Exception_When_Database_Is_Null()
         {
             // arrange
             IMongoClient client = new MongoClient();
@@ -93,7 +93,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoClient_Should_Throw_Exception_When_Database_Is_Empty_String()
+        public static void Contructor_With_MongoClient_Should_Throw_Exception_When_Database_Is_Empty_String()
         {
             // arrange
             IMongoClient client = new MongoClient();
@@ -110,7 +110,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoClient_Should_Returns_Instance()
+        public static void Contructor_With_MongoClient_Should_Returns_Instance()
         {
             // arrange
             IMongoClient client = new MongoClient();
@@ -126,7 +126,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_MongoConfiguration_Is_Null()
+        public static void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_MongoConfiguration_Is_Null()
         {
             // arrange
             MongoConfiguration config = null;
@@ -141,10 +141,10 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_Database_Is_Null()
+        public static void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_Database_Is_Null()
         {
             // arrange
-            MongoConfiguration config = new MongoConfiguration()
+            MongoConfiguration config = new MongoConfiguration
             {
                 ConnectionString = "mongodb://localhost",
                 Database = null,
@@ -160,10 +160,10 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_Database_Is_Empty_String()
+        public static void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_Database_Is_Empty_String()
         {
             // arrange
-            MongoConfiguration config = new MongoConfiguration()
+            MongoConfiguration config = new MongoConfiguration
             {
                 ConnectionString = "mongodb://localhost",
                 Database = ""
@@ -179,10 +179,10 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_ConnectionString_Is_Null()
+        public static void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_ConnectionString_Is_Null()
         {
             // arrange
-            MongoConfiguration config = new MongoConfiguration()
+            MongoConfiguration config = new MongoConfiguration
             {
                 ConnectionString = null,
                 Database = "MyDB"
@@ -198,10 +198,10 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_ConnectionString_Is_Invalid()
+        public static void Contructor_With_MongoConfiguration_Should_Throw_Exception_When_ConnectionString_Is_Invalid()
         {
             // arrange
-            MongoConfiguration config = new MongoConfiguration()
+            MongoConfiguration config = new MongoConfiguration
             {
                 ConnectionString = "some text",
                 Database = "MyDB"
@@ -217,10 +217,10 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Should_Returns_Instance()
+        public static void Contructor_With_MongoConfiguration_Should_Returns_Instance()
         {
             // arrange
-            MongoConfiguration config = new MongoConfiguration()
+            MongoConfiguration config = new MongoConfiguration
             {
                 ConnectionString = "mongodb://localhost",
                 Database = "MyDB"
@@ -236,10 +236,10 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Contructor_With_MongoConfiguration_Splitted_Data_Should_Returns_Instance()
+        public static void Contructor_With_MongoConfiguration_Splitted_Data_Should_Returns_Instance()
         {
             // arrange
-            MongoConfiguration config = new MongoConfiguration()
+            MongoConfiguration config = new MongoConfiguration
             {
                 ConnectionString = "mongodb://localhost",
                 Database = "MyDB"
@@ -255,12 +255,12 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Create_Should_Works()
+        public static void Create_Should_Works()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
-            var document = new GenericTestWithIdProperty()
+            var document = new GenericTestWithIdProperty
             {
                 Id = "123",
                 SomeTest = "test"
@@ -274,7 +274,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Create_Should_Throws_Exception_When_Document_Is_Null()
+        public static void Create_Should_Throws_Exception_When_Document_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -290,25 +290,25 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Create_Many_Should_Works()
+        public static void Create_Many_Should_Works()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
 
-            var document1 = new GenericTestWithIdProperty()
+            var document1 = new GenericTestWithIdProperty
             {
                 Id = "123",
                 SomeTest = "test"
             };
 
-            var document2 = new GenericTestWithIdProperty()
+            var document2 = new GenericTestWithIdProperty
             {
                 Id = "124",
                 SomeTest = "test2"
             };
 
-            var documents = new List<GenericTestWithIdProperty>() { document1, document2 };
+            var documents = new List<GenericTestWithIdProperty> { document1, document2 };
 
             // act
             mongoCRUD.Create(documents);
@@ -318,7 +318,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Create_Many_Should_Throws_Exception_When_Document_Is_Null()
+        public static void Create_Many_Should_Throws_Exception_When_Document_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -334,12 +334,12 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Update_Should_Works()
+        public static void Update_Should_Works()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
-            var document = new GenericTestWithIdProperty()
+            var document = new GenericTestWithIdProperty
             {
                 Id = "123",
                 SomeTest = "test"
@@ -353,7 +353,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Update_Should_Throws_Exception_When_Document_Is_Null()
+        public static void Update_Should_Throws_Exception_When_Document_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -369,7 +369,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void UpdateByQuery_Should_Works_With_Filter()
+        public static void UpdateByQuery_Should_Works_With_Filter()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -379,7 +379,7 @@ namespace Mongo.CRUD.Tests
                 Id = "123",
                 SomeTest = "test"
             };
-            var filters = mongoCRUD.GetFilterBuilder().Eq(r => r.SomeTest, "test");
+            var filters = FilterBuilder.GetFilterBuilder<GenericTestWithIdProperty>().Eq(r => r.SomeTest, "test");
 
             // act
             var isAcknowledged = mongoCRUD.UpdateByQuery(filters, document);
@@ -389,7 +389,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void UpdateByQuery_Should_Works_With_Null_Filter()
+        public static void UpdateByQuery_Should_Works_With_Null_Filter()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -408,7 +408,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void UpdateByQuery_Should_Throws_Exception_When_PartialDocument_Is_Null()
+        public static void UpdateByQuery_Should_Throws_Exception_When_PartialDocument_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -423,12 +423,12 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Upsert_Should_Works()
+        public static void Upsert_Should_Works()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithBsonIdAnnotation>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithBsonIdAnnotation>(mongoClient, "SomeDB");
-            var document = new GenericTestWithBsonIdAnnotation()
+            var document = new GenericTestWithBsonIdAnnotation
             {
                 CustomId = "123",
                 SomeTest = "test"
@@ -442,7 +442,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Upsert_Should_Throws_Exception_When_Document_Is_Null()
+        public static void Upsert_Should_Throws_Exception_When_Document_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithBsonIdAnnotation>(true).Object;
@@ -458,7 +458,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Delete_Should_Works()
+        public static void Delete_Should_Works()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -473,7 +473,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Delete_Should_Throws_Exception_When_Id_Is_Null()
+        public static void Delete_Should_Throws_Exception_When_Id_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -489,12 +489,12 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void DeleteByQuery_Should_Works_With_Filter()
+        public static void DeleteByQuery_Should_Works_With_Filter()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
-            var filters = mongoCRUD.GetFilterBuilder().Eq(r => r.SomeTest, "test");
+            var filters = FilterBuilder.GetFilterBuilder<GenericTestWithIdProperty>().Eq(r => r.SomeTest, "test");
 
             // act
             var isAcknowledged = mongoCRUD.DeleteByQuery(filters);
@@ -504,7 +504,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void DeleteByQuery_Should_Works_With_Null_Filter()
+        public static void DeleteByQuery_Should_Works_With_Null_Filter()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -519,7 +519,7 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void Get_Should_Throws_Exception_When_Id_Is_Null()
+        public static void Get_Should_Throws_Exception_When_Id_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -533,22 +533,8 @@ namespace Mongo.CRUD.Tests
             Assert.Equal("Value cannot be null.\r\nParameter name: id", ex.Message);
         }
 
-        //[Fact]
-        //public void Get_Should_Return_Document()
-        //{
-        //    // arrange
-        //    var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
-        //    var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
-        //
-        //    // act
-        //    var document = mongoCRUD.Get("123");
-        //
-        //    // assert
-        //    Assert.NotNull(document);
-        //}
-
         [Fact]
-        public void Search_Should_Throws_Exception_When_Options_Is_Null()
+        public static void Search_Should_Throws_Exception_When_Options_Is_Null()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
@@ -563,12 +549,12 @@ namespace Mongo.CRUD.Tests
         }
 
         [Fact]
-        public void GetDocumentId_Should_Throws_Exception_When_Object_Not_Have_Id_Property_Or_BsonId_Annotation()
+        public static void GetDocumentId_Should_Throws_Exception_When_Object_Not_Have_Id_Property_Or_BsonId_Annotation()
         {
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithoutIdPropertyOrBsonIdAnnotation>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithoutIdPropertyOrBsonIdAnnotation>(mongoClient, "SomeDB");
-            var document = new GenericTestWithoutIdPropertyOrBsonIdAnnotation()
+            var document = new GenericTestWithoutIdPropertyOrBsonIdAnnotation
             {
                 CustomId = "123",
                 SomeTest = "some test"

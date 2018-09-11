@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Mongo.CRUD.Tests.Fakes
 {
-    public class FakeMongoClient
+    public static class FakeMongoClient
     {
         public static Mock<MongoDB.Driver.IMongoClient> GetMongoClientMock<T>(bool boolOperationsResult = true, long searchSizeResult = 10)
             where T : class, new()
@@ -128,7 +128,7 @@ namespace Mongo.CRUD.Tests.Fakes
 
         public override bool IsAcknowledged => this._isAcknowledged;
 
-        public override long DeletedCount => throw new NotImplementedException();
+        public override long DeletedCount => 0;
     }
 
     public class SuccesUpdateResult : MongoDB.Driver.UpdateResult
@@ -142,13 +142,13 @@ namespace Mongo.CRUD.Tests.Fakes
 
         public override bool IsAcknowledged => this._isAcknowledged;
 
-        public override bool IsModifiedCountAvailable => throw new NotImplementedException();
+        public override bool IsModifiedCountAvailable => true;
 
-        public override long MatchedCount => throw new NotImplementedException();
+        public override long MatchedCount => 0;
 
-        public override long ModifiedCount => throw new NotImplementedException();
+        public override long ModifiedCount => 0;
 
-        public override BsonValue UpsertedId => throw new NotImplementedException();
+        public override BsonValue UpsertedId => null;
     }
 
     public class SuccesReplaceOneResult : MongoDB.Driver.ReplaceOneResult
@@ -162,12 +162,12 @@ namespace Mongo.CRUD.Tests.Fakes
 
         public override bool IsAcknowledged => this._isAcknowledged;
 
-        public override bool IsModifiedCountAvailable => throw new NotImplementedException();
+        public override bool IsModifiedCountAvailable => true;
 
-        public override long MatchedCount => throw new NotImplementedException();
+        public override long MatchedCount => 0;
 
-        public override long ModifiedCount => throw new NotImplementedException();
+        public override long ModifiedCount => 0;
 
-        public override BsonValue UpsertedId => throw new NotImplementedException();
+        public override BsonValue UpsertedId => null;
     }
 }

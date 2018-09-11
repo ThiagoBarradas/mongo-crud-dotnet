@@ -6,13 +6,13 @@ using Xunit;
 
 namespace Mongo.CRUD.Tests.Helpers
 {
-    public class PropertyHelperTest
+    public static class PropertyHelperTest
     {
         [Fact]
-        public void GetIndividualPropertyDetailsByAttribute_Should_Get_Value()
+        public static void GetIndividualPropertyDetailsByAttribute_Should_Get_Value()
         {
             // arrange
-            MyExampleWithAnnotation obj = new MyExampleWithAnnotation()
+            MyExampleWithAnnotation obj = new MyExampleWithAnnotation
             {
                 UniqueId = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
@@ -30,10 +30,10 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByAttribute_Should_Get_Null()
+        public static void GetIndividualPropertyDetailsByAttribute_Should_Get_Null()
         {
             // arrange
-            MyExampleWithoutAnnotation obj = new MyExampleWithoutAnnotation()
+            MyExampleWithoutAnnotation obj = new MyExampleWithoutAnnotation
             {
                 UniqueId = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
@@ -48,7 +48,7 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByAttribute_Should_Throw_Exception_When_Obj_Is_Null()
+        public static void GetIndividualPropertyDetailsByAttribute_Should_Throw_Exception_When_Obj_Is_Null()
         {
             // arrange
             MyExampleWithoutAnnotation obj = null;
@@ -63,10 +63,10 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByPropertyName_Should_Get_Value()
+        public static void GetIndividualPropertyDetailsByPropertyName_Should_Get_Value()
         {
             // arrange
-            MyExampleWithIdProperty obj = new MyExampleWithIdProperty()
+            MyExampleWithIdProperty obj = new MyExampleWithIdProperty
             {
                 Id = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
@@ -83,10 +83,10 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByPropertyName_Should_Get_Null()
+        public static void GetIndividualPropertyDetailsByPropertyName_Should_Get_Null()
         {
             // arrange
-            MyExampleWithIdProperty obj = new MyExampleWithIdProperty()
+            MyExampleWithIdProperty obj = new MyExampleWithIdProperty
             {
                 Id = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
@@ -101,7 +101,7 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByPropertyName_Should_Throw_Exception_When_Obj_Is_Null()
+        public static void GetIndividualPropertyDetailsByPropertyName_Should_Throw_Exception_When_Obj_Is_Null()
         {
             // arrange
             MyExampleWithIdProperty obj = null;
@@ -116,10 +116,10 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByPropertyName_Should_Throw_Exception_When_PropertyName_Is_Null()
+        public static void GetIndividualPropertyDetailsByPropertyName_Should_Throw_Exception_When_PropertyName_Is_Null()
         {
             // arrange
-            MyExampleWithIdProperty obj = new MyExampleWithIdProperty()
+            MyExampleWithIdProperty obj = new MyExampleWithIdProperty
             {
                 Id = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
@@ -135,11 +135,11 @@ namespace Mongo.CRUD.Tests.Helpers
         }
 
         [Fact]
-        public void GetIndividualPropertyDetailsByPropertyName_Should_Throw_Exception_When_PropertyName_Is_Empty_String()
+        public static void GetIndividualPropertyDetailsByPropertyName_Should_Throw_Exception_When_PropertyName_Is_Empty_String()
         {
             // arrange
-            MyExampleWithIdProperty obj = new MyExampleWithIdProperty()
-            {
+            MyExampleWithIdProperty obj = new MyExampleWithIdProperty
+            { 
                 Id = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
             };

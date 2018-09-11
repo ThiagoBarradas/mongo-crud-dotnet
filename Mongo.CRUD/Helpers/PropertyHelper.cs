@@ -21,20 +21,20 @@ namespace Mongo.CRUD.Helpers
         {
             if (obj == null)
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
             }
 
             if (string.IsNullOrWhiteSpace(propertyName) == true)
             {
-                throw new ArgumentNullException("propertyName");
+                throw new ArgumentNullException(nameof(propertyName));
             }
 
             foreach (var propertyInfo in obj.GetType().GetProperties())
             {
-                if (propertyInfo.Name.ToLower() == propertyName.Trim().ToLower())
+                if (propertyInfo.Name.ToLowerInvariant() == propertyName.Trim().ToLowerInvariant())
                 {
                     var value = propertyInfo.GetValue(obj);
-                    return new PropertyDetails()
+                    return new PropertyDetails
                     {
                         PropertyInfo = propertyInfo,
                         Value = value
@@ -58,7 +58,7 @@ namespace Mongo.CRUD.Helpers
         {
             if (obj == null)
             {
-                throw new ArgumentNullException("obj");
+                throw new ArgumentNullException(nameof(obj));
             }
 
             foreach (var propertyInfo in obj.GetType().GetProperties())
@@ -68,7 +68,7 @@ namespace Mongo.CRUD.Helpers
                 if (attributes != null & attributes.Any())
                 {
                     var value = propertyInfo.GetValue(obj);
-                    return new PropertyDetails<TAttribute>()
+                    return new PropertyDetails<TAttribute>
                     {
                         Attributes = attributes,
                         PropertyInfo = propertyInfo,

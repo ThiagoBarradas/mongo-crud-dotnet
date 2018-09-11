@@ -82,11 +82,5 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         TDocument Get(object id);
-
-        /// <summary>
-        /// Get filter builder
-        /// </summary>
-        /// <returns></returns>
-        FilterDefinitionBuilder<TDocument> GetFilterBuilder();
     }
 }

@@ -19,12 +19,15 @@ namespace Mongo.CRUD.Tests.Fakes
 
         private readonly IEnumerable<TDocument> _items;
 
-        public FakeFindFluent(IEnumerable<TDocument> items = null)
+        public FakeFindFluent()
+        {
+            _items = Enumerable.Empty<TDocument>();
+        }
+
+        public FakeFindFluent(IEnumerable<TDocument> items)
         {
             _items = items ?? Enumerable.Empty<TDocument>();
         }
-
-        public FindOptions<TDocument, TDocument> Options => throw new NotImplementedException();
 
         public IFindFluent<TDocument, TDocument> Limit(int? limit)
         {
@@ -57,35 +60,74 @@ namespace Mongo.CRUD.Tests.Fakes
             return this;
         }
 
-        public long Count(CancellationToken cancellationToken = default(CancellationToken))
+        public long Count()
         {
             return _items.LongCount();
         }
 
-        public IFindFluent<TDocument, TResult> As<TResult>(MongoDB.Bson.Serialization.IBsonSerializer<TResult> resultSerializer = null)
+        public long Count(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _items.LongCount();
+        }
+
+        public IFindFluent<TDocument, TResult> As<TResult>()
+        {
+            return (IFindFluent<TDocument, TResult>)this;
+        }
+
+        public IFindFluent<TDocument, TResult> As<TResult>(MongoDB.Bson.Serialization.IBsonSerializer<TResult> resultSerializer)
+        {
+            return (IFindFluent<TDocument, TResult>)this;
         }
 
         public FilterDefinition<TDocument> Filter
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get => Builders<TDocument>.Filter.Empty;
+            set { }
         }
 
-        public Task<long> CountAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public FindOptions<TDocument, TDocument> Options => new FindOptions<TDocument, TDocument>();
+
+        public Task<long> CountAsync()
         {
-            throw new NotImplementedException();
+            return new Task<long>(() =>
+            {
+                return this.Count();
+            });
         }
 
-        public long CountDocuments(CancellationToken cancellationToken = default(CancellationToken))
+        public Task<long> CountAsync(CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return new Task<long>(() =>
+            {
+                return this.Count();
+            });
         }
 
-        public Task<long> CountDocumentsAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public long CountDocuments()
         {
-            throw new NotImplementedException();
+            return this.Count();
+        }
+
+        public long CountDocuments(CancellationToken cancellationToken)
+        {
+            return this.Count();
+        }
+
+        public Task<long> CountDocumentsAsync()
+        {
+            return new Task<long>(() =>
+            {
+                return this.Count();
+            });
+        }
+
+        public Task<long> CountDocumentsAsync(CancellationToken cancellationToken)
+        {
+            return new Task<long>(() =>
+            {
+                return this.Count();
+            });
         }
 
         public IFindFluent<TDocument, TNewProjection> Project<TNewProjection>(ProjectionDefinition<TDocument, TNewProjection> projection)
@@ -93,12 +135,22 @@ namespace Mongo.CRUD.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public IAsyncCursor<TDocument> ToCursor(CancellationToken cancellationToken = default(CancellationToken))
+        public IAsyncCursor<TDocument> ToCursor()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IAsyncCursor<TDocument>> ToCursorAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public IAsyncCursor<TDocument> ToCursor(CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IAsyncCursor<TDocument>> ToCursorAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IAsyncCursor<TDocument>> ToCursorAsync(CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

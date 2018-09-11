@@ -76,7 +76,7 @@ namespace Mongo.CRUD
         /// <param name="database"></param>
         public MongoCRUD(string connectionString, string database)
         {
-            this.Configuration = new MongoConfiguration()
+            this.Configuration = new MongoConfiguration
             {
                 ConnectionString = connectionString,
                 Database = database
@@ -100,7 +100,7 @@ namespace Mongo.CRUD
         {
             if (document == null)
             {
-                throw new ArgumentNullException("document");
+                throw new ArgumentNullException(nameof(document));
             }
 
             this.Collection.InsertOne(document);
@@ -114,7 +114,7 @@ namespace Mongo.CRUD
         {
             if (documents == null)
             {
-                throw new ArgumentNullException("documents");
+                throw new ArgumentNullException(nameof(documents));
             }
 
             this.Collection.InsertMany(documents);
@@ -129,7 +129,7 @@ namespace Mongo.CRUD
         {
             if (document == null)
             {
-                throw new ArgumentNullException("document");
+                throw new ArgumentNullException(nameof(document));
             }
 
             var id = this.GetDocumentId(document);
@@ -148,14 +148,11 @@ namespace Mongo.CRUD
         /// <returns></returns>
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
         {
-            if (filters == null)
-            {
-                filters = this.GetFilterBuilder().Empty;
-            }
+            filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
             if (partialDocument == null)
             {
-                throw new ArgumentNullException("partialDocument");
+                throw new ArgumentNullException(nameof(partialDocument));
             }
 
             var updateMapped = new BsonDocument { { "$set", partialDocument.ToBsonDocument() } };
@@ -173,13 +170,13 @@ namespace Mongo.CRUD
         {
             if (document == null)
             {
-                throw new ArgumentNullException("document");
+                throw new ArgumentNullException(nameof(document));
             }
 
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions() { IsUpsert = true };
+            var options = new UpdateOptions { IsUpsert = true };
 
             return this.Collection.ReplaceOne(filter, document, options).IsAcknowledged;
         }
@@ -193,7 +190,7 @@ namespace Mongo.CRUD
         {
             if (id == null)
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
@@ -207,10 +204,7 @@ namespace Mongo.CRUD
         /// <returns></returns>
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
         {
-            if (filters == null)
-            {
-                filters = this.GetFilterBuilder().Empty;
-            }
+            filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
             return this.Collection.DeleteMany(filters).IsAcknowledged;
         }
@@ -225,14 +219,11 @@ namespace Mongo.CRUD
         {
             if (options == null)
             {
-                throw new ArgumentNullException("options");
+                throw new ArgumentNullException(nameof(options));
             }
 
-            if (filters == null)
-            {
-                filters = this.GetFilterBuilder().Empty;
-            }
-            
+            filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
+
             var documents = this.Collection.Find(filters)
                 .WithPaging(options)
                 .WithSorting(options);
@@ -255,20 +246,11 @@ namespace Mongo.CRUD
         {
             if (id == null)
             {
-                throw new ArgumentNullException("id");
+                throw new ArgumentNullException(nameof(id));
             }
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
             return this.Collection.Find(filter).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Get filter builder
-        /// </summary>
-        /// <returns></returns>
-        public FilterDefinitionBuilder<TDocument> GetFilterBuilder()
-        {
-            return FilterBuilder.GetFilterBuilder<TDocument>();
         }
 
         /// <summary>
@@ -299,7 +281,7 @@ namespace Mongo.CRUD
         /// <param name="configuration"></param>
         private void SetupMongoConfiguration(MongoConfiguration configuration)
         {
-            this._configuration = configuration ?? throw new ArgumentNullException("configuration");
+            this._configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             var mongoClient = new MongoClient(configuration.ConnectionString);
             this.SetupMongoClient(mongoClient, configuration.Database);
         }
@@ -312,10 +294,10 @@ namespace Mongo.CRUD
         {
             if (string.IsNullOrWhiteSpace(database))
             {
-                throw new ArgumentNullException("database");
+                throw new ArgumentNullException(nameof(database));
             }
 
-            this.MongoClient = mongoClient ?? throw new ArgumentNullException("mongoClient");
+            this.MongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
             this.Database = this.MongoClient.GetDatabase(database);
             this.Collection = this.Database.GetCollection<TDocument>(typeof(TDocument).Name);
         }

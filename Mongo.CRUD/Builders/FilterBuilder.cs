@@ -55,6 +55,21 @@ namespace Mongo.CRUD.Builders
         }
 
         /// <summary>
+        /// Join filters using "AND" or "OR" operator. Default "AND"
+        /// Dont worry about null or others issues about filter join
+        /// </summary>
+        /// <typeparam name="TDocument"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="filterToAdd"></param>
+        /// <param name="operation"></param>
+        /// <returns></returns>
+        public static FilterDefinition<TDocument> Join<TDocument>(this FilterDefinition<TDocument> filter, FilterDefinition<TDocument> filterToAdd)
+            where TDocument : class, new()
+        {
+            return Join(filter, filterToAdd, Operator.And);
+        }
+
+        /// <summary>
         /// Join filters using "AND" or "OR" operator
         /// Dont worry about null or others issues about filter join
         /// </summary>
@@ -63,22 +78,27 @@ namespace Mongo.CRUD.Builders
         /// <param name="filterToAdd"></param>
         /// <param name="operation"></param>
         /// <returns></returns>
-        public static FilterDefinition<TDocument> Join<TDocument>(this FilterDefinition<TDocument> filter, FilterDefinition<TDocument> filterToAdd, Operator operation = Operator.And)
+        public static FilterDefinition<TDocument> Join<TDocument>(this FilterDefinition<TDocument> filter, FilterDefinition<TDocument> filterToAdd, Operator operation)
             where TDocument : class, new()
         {
-            if (filter == null) return filterToAdd;
-            if (filterToAdd == null) return filter;
+            if (filter == null)
+            {
+                return filterToAdd;
+            }
+
+            if (filterToAdd == null)
+            {
+                return filter;
+            }
 
             if (operation == Operator.And)
             {
-                filter = filter & filterToAdd;
+                return filter & filterToAdd;
             }
             else
             {
-                filter = filter | filterToAdd;
+                return filter | filterToAdd;
             }
-
-            return filter;
         }
 
         /// <summary>
