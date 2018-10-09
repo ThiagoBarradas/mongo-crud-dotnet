@@ -12,7 +12,7 @@ First off, thanks for taking the time to contribute!
 
 ### Pull Requests
 
-Template [PULLREQUEST-TEMPLATE](PULLREQUEST-TEMPLATE.md)
+Template [PULL_REQUEST_TEMPLATE](PULL_REQUEST_TEMPLATE.md)
 
 ### Git Commit Messages
 
