@@ -323,6 +323,18 @@ namespace Mongo.CRUD
         /// </summary>
         public static void RegisterDefaultConventionPack(Func<Type, bool> filter)
         {
+            ConventionRegistry.Register(DEFAULT_CONVENTION_PACK_NAME, GetDefaultConventionPack(), filter);
+        }
+        
+        /// <summary>
+        /// Get Default convention pack
+        /// - Guid as string
+        /// - Enum as string
+        /// - CamelCase element name
+        /// - Ignore extra elements
+        /// </summary>
+        public static ConventionPack GetDefaultConventionPack()
+        {
             BsonSerializer.RegisterSerializer(typeof(Guid), new GuidSerializer(BsonType.String));
 
             var conventionPack = new ConventionPack
@@ -330,10 +342,9 @@ namespace Mongo.CRUD
                 new CamelCaseElementNameConvention(),
                 new IgnoreExtraElementsConvention(true),
                 new EnumRepresentationConvention(BsonType.String)
-
             };
 
-            ConventionRegistry.Register(DEFAULT_CONVENTION_PACK_NAME, conventionPack, filter);
+            return conventionPack;
         }
     }
 }
