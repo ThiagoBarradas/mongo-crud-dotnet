@@ -8,6 +8,15 @@ namespace Mongo.CRUD.Models
     public class SearchOptions
     {
         /// <summary>
+        /// Contructor
+        /// </summary>
+        public SearchOptions(int pageNumber = 1, int pageSize = 10)
+        {
+            this.PageNumber = pageNumber;
+            this.PageSize = pageSize;
+        }
+
+        /// <summary>
         /// Page number
         /// </summary>
         public int PageNumber { get; set; }

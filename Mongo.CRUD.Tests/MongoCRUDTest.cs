@@ -4,11 +4,9 @@ using Mongo.CRUD.Tests.Fakes;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Xunit;
 
 namespace Mongo.CRUD.Tests
@@ -46,6 +44,9 @@ namespace Mongo.CRUD.Tests
             Assert.Single(rendered2);
             Assert.Equal("myTest", rendered2?.FirstOrDefault().Name);
             Assert.Equal(myTest.MyTest.ToString(), rendered2?.FirstOrDefault().Value);
+
+            // Cleanup
+            MongoCRUD.UnregisterDefaultConventionPack();
         }
 
         [Fact]
@@ -531,21 +532,6 @@ namespace Mongo.CRUD.Tests
 
             // assert
             Assert.Equal("Value cannot be null.\r\nParameter name: id", ex.Message);
-        }
-
-        [Fact]
-        public static void Search_Should_Throws_Exception_When_Options_Is_Null()
-        {
-            // arrange
-            var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
-            var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
-
-            // act
-            Exception ex =
-                Assert.Throws<ArgumentNullException>(() => mongoCRUD.Search(null, null));
-
-            // assert
-            Assert.Equal("Value cannot be null.\r\nParameter name: options", ex.Message);
         }
 
         [Fact]

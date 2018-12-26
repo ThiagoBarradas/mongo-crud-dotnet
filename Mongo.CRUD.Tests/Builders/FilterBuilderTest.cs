@@ -15,13 +15,9 @@ namespace Mongo.CRUD.Tests.Builders
         public static void WithSorting_By_Asc()
         {
             // arrange
-            SearchOptions options = new SearchOptions
-            {
-                PageNumber = 1,
-                PageSize = 10,
-                SortField = "MyCustomField",
-                SortMode = SortMode.Asc
-            };
+            SearchOptions options = new SearchOptions(1, 10);
+            options.SortField = "MyCustomField";
+            options.SortMode = SortMode.Asc;
 
             FakeFindFluent<SomeClass> findFluent = new FakeFindFluent<SomeClass>();
 

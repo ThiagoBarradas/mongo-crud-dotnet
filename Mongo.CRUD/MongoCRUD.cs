@@ -1,11 +1,10 @@
 ﻿using Mongo.CRUD.Builders;
+using Mongo.CRUD.Conventions;
 using Mongo.CRUD.Helpers;
 using Mongo.CRUD.Models;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Conventions;
-using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -215,11 +214,11 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options)
+        public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null)
         {
             if (options == null)
             {
-                throw new ArgumentNullException(nameof(options));
+                options = new SearchOptions();
             }
 
             filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
@@ -325,7 +324,15 @@ namespace Mongo.CRUD
         {
             ConventionRegistry.Register(DEFAULT_CONVENTION_PACK_NAME, GetDefaultConventionPack(), filter);
         }
-        
+
+        /// <summary>
+        /// Remove default convention pack
+        /// </summary>
+        public static void UnregisterDefaultConventionPack()
+        {
+            ConventionRegistry.Remove(DEFAULT_CONVENTION_PACK_NAME);
+        }
+
         /// <summary>
         /// Get Default convention pack
         /// - Guid as string
@@ -335,13 +342,12 @@ namespace Mongo.CRUD
         /// </summary>
         public static ConventionPack GetDefaultConventionPack()
         {
-            BsonSerializer.RegisterSerializer(typeof(Guid), new GuidSerializer(BsonType.String));
-
             var conventionPack = new ConventionPack
             {
                 new CamelCaseElementNameConvention(),
                 new IgnoreExtraElementsConvention(true),
-                new EnumRepresentationConvention(BsonType.String)
+                new EnumRepresentationConvention(BsonType.String),
+                new GuidAsStringRepresentationConvention()
             };
 
             return conventionPack;
