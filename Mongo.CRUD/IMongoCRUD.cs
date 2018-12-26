@@ -74,7 +74,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options);
+        SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null);
 
         /// <summary>
         /// Get document by id
