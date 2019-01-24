@@ -1,4 +1,5 @@
-﻿using Mongo.CRUD.Builders;
+﻿using Mongo.CRUD.Attributes;
+using Mongo.CRUD.Builders;
 using Mongo.CRUD.Conventions;
 using Mongo.CRUD.Helpers;
 using Mongo.CRUD.Models;
@@ -298,7 +299,14 @@ namespace Mongo.CRUD
 
             this.MongoClient = mongoClient ?? throw new ArgumentNullException(nameof(mongoClient));
             this.Database = this.MongoClient.GetDatabase(database);
-            this.Collection = this.Database.GetCollection<TDocument>(typeof(TDocument).Name);
+
+            var currentType = typeof(TDocument);
+            var collectionNameAttribute = (CollectionNameAttribute) currentType
+                .GetCustomAttributes(typeof(CollectionNameAttribute), false).FirstOrDefault();
+
+            var collectionName = collectionNameAttribute?.CollectionName ?? currentType.Name;
+
+            this.Collection = this.Database.GetCollection<TDocument>(collectionName);
         }
     }
 

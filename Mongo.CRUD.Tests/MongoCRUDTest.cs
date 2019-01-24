@@ -1,3 +1,4 @@
+using Mongo.CRUD.Attributes;
 using Mongo.CRUD.Builders;
 using Mongo.CRUD.Models;
 using Mongo.CRUD.Tests.Fakes;
@@ -583,6 +584,7 @@ namespace Mongo.CRUD.Tests
         public string SomeTest { get; set; }
     }
 
+    [CollectionName("CustomCollectionName")]
     public class GenericTestWithoutIdPropertyOrBsonIdAnnotation
     {
         public string CustomId { get; set; }
