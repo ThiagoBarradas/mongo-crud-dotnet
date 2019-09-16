@@ -10,6 +10,8 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Mongo.CRUD
 {
@@ -46,20 +48,28 @@ namespace Mongo.CRUD
         /// </summary>
         public MongoConfiguration Configuration
         {
-            get
-            {
-                return _configuration;
-            }
-            set
-            {
-                this.SetupMongoConfiguration(value);
-            }
+            get { return _configuration; }
+            set { this.SetupMongoConfiguration(value); }
         }
 
         /// <summary>
         /// Empty constructor
         /// </summary>
-        public MongoCRUD() { }
+        public MongoCRUD()
+        {
+        }
+
+        /// <summary>
+        /// Construct MongoCRUD with mongo client and database
+        /// </summary>
+        /// <param name="mongoClient"></param>
+        /// <param name="database"></param>
+        public MongoCRUD(IMongoClient mongoClient, IMongoDatabase database)
+        {
+            this.MongoClient = mongoClient;
+            this.Database = database;
+            this.Collection = database.GetCollection<TDocument>(typeof(TDocument).Name);
+        }
 
         /// <summary>
         /// Contruct MongoCRUD with mongo client and database name
@@ -97,13 +107,20 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="document"></param>
         public void Create(TDocument document)
+            => CreateAsync(document).RunSynchronously();
+
+        /// <summary>
+        /// Create new document
+        /// </summary>
+        /// <param name="document"></param>
+        public async Task CreateAsync(TDocument document)
         {
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            this.Collection.InsertOne(document);
+            await this.Collection.InsertOneAsync(document);
         }
 
         /// <summary>
@@ -111,13 +128,20 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="obj"></param>
         public void Create(IEnumerable<TDocument> documents)
+            => CreateAsync(documents).RunSynchronously();
+
+        /// <summary>
+        /// Create many new documents
+        /// </summary>
+        /// <param name="obj"></param>
+        public async Task CreateAsync(IEnumerable<TDocument> documents)
         {
             if (documents == null)
             {
                 throw new ArgumentNullException(nameof(documents));
             }
 
-            this.Collection.InsertMany(documents);
+            await this.Collection.InsertManyAsync(documents);
         }
 
         /// <summary>
@@ -126,6 +150,14 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Update(TDocument document)
+            => UpdateAsync(document).Result;
+
+        /// <summary>
+        /// Update one document
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateAsync(TDocument document)
         {
             if (document == null)
             {
@@ -135,9 +167,10 @@ namespace Mongo.CRUD
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions() { IsUpsert = false };
+            var options = new UpdateOptions() {IsUpsert = false};
 
-            return this.Collection.ReplaceOne(filter, document, options).IsAcknowledged;
+            var actionResult = await this.Collection.ReplaceOneAsync(filter, document, options);
+            return actionResult.IsAcknowledged;
         }
 
         /// <summary>
@@ -147,6 +180,15 @@ namespace Mongo.CRUD
         /// <param name="partialDocument"></param>
         /// <returns></returns>
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
+            => UpdateByQueryAsync(filters, partialDocument).Result;
+
+        /// <summary>
+        /// Update one or more documents partially by filter
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <param name="partialDocument"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdateByQueryAsync(FilterDefinition<TDocument> filters, object partialDocument)
         {
             filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
@@ -155,10 +197,10 @@ namespace Mongo.CRUD
                 throw new ArgumentNullException(nameof(partialDocument));
             }
 
-            var updateMapped = new BsonDocument { { "$set", partialDocument.ToBsonDocument() } };
+            var updateMapped = new BsonDocument {{"$set", partialDocument.ToBsonDocument()}};
 
             var update = new BsonDocumentUpdateDefinition<TDocument>(updateMapped);
-            return this.Collection.UpdateMany(filters, update).IsAcknowledged;
+            return (await this.Collection.UpdateManyAsync(filters, update)).IsAcknowledged;
         }
 
         /// <summary>
@@ -167,6 +209,14 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Upsert(TDocument document)
+            => UpsertAsync(document).Result;
+
+        /// <summary>
+        /// Update if exists or create new document
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
+        public async Task<bool> UpsertAsync(TDocument document)
         {
             if (document == null)
             {
@@ -176,9 +226,9 @@ namespace Mongo.CRUD
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions { IsUpsert = true };
+            var options = new UpdateOptions {IsUpsert = true};
 
-            return this.Collection.ReplaceOne(filter, document, options).IsAcknowledged;
+            return (await this.Collection.ReplaceOneAsync(filter, document, options)).IsAcknowledged;
         }
 
         /// <summary>
@@ -187,6 +237,14 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public bool Delete(object id)
+            => DeleteAsync(id).Result;
+
+        /// <summary>
+        /// Delete document by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteAsync(object id)
         {
             if (id == null)
             {
@@ -194,7 +252,7 @@ namespace Mongo.CRUD
             }
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            return this.Collection.DeleteOne(filter).IsAcknowledged;
+            return (await this.Collection.DeleteOneAsync(filter)).IsAcknowledged;
         }
 
         /// <summary>
@@ -203,11 +261,20 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <returns></returns>
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
+            => DeleteByQueryAsync(filters).Result;
+
+        /// <summary>
+        /// Delete by query
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <returns></returns>
+        public async Task<bool> DeleteByQueryAsync(FilterDefinition<TDocument> filters)
         {
             filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
-            return this.Collection.DeleteMany(filters).IsAcknowledged;
+            return (await this.Collection.DeleteManyAsync(filters)).IsAcknowledged;
         }
+
 
         /// <summary>
         /// Search documents by filters, with paging and sorting
@@ -243,6 +310,15 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public TDocument Get(object id)
+            => GetAsync(id).Result;
+
+
+        /// <summary>
+        /// Get document by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<TDocument> GetAsync(object id)
         {
             if (id == null)
             {
@@ -250,7 +326,25 @@ namespace Mongo.CRUD
             }
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            return this.Collection.Find(filter).FirstOrDefault();
+            return (await this.Collection.FindAsync(filter)).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Search documents by expression, with paging and sorting
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <returns></returns>
+        public IEnumerable<TDocument> Search(Expression<Func<TDocument, bool>> filters)
+            => SearchAsync(filters).Result;
+
+        /// <summary>
+        /// Search documents by expression, with paging and sorting
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters)
+        {
+            return await this.Collection.FindAsync(filters).Result.ToListAsync();
         }
 
         /// <summary>
@@ -271,9 +365,11 @@ namespace Mongo.CRUD
             {
                 return resultByPropertyName.Value;
             }
-                
-            throw new InvalidOperationException("Model must have a property called 'Id' or a property with BsonId attribute");
+
+            throw new InvalidOperationException(
+                "Model must have a property called 'Id' or a property with BsonId attribute");
         }
+
 
         /// <summary>
         /// Setup instance configuration

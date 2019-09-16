@@ -1,4 +1,5 @@
-﻿using Mongo.CRUD.Enums;
+﻿using System.Threading.Tasks;
+using Mongo.CRUD.Enums;
 using Mongo.CRUD.Models;
 using MongoDB.Driver;
 
@@ -38,6 +39,36 @@ namespace Mongo.CRUD.Builders
 
             return queryResults;
         }
+        
+        /// <summary>
+        /// Set sorting for search
+        /// </summary>
+        /// <typeparam name="TDocument"></typeparam>
+        /// <param name="queryResults"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static Task<IFindFluent<TDocument, TDocument>> WithSorting<TDocument>(this Task<IFindFluent<TDocument, TDocument>> queryResults, SearchOptions options)
+            where TDocument : class, new()
+        {
+            if (string.IsNullOrWhiteSpace(options.SortField) == false)
+            {
+                var sortBuilder = Builders<TDocument>.Sort;
+                SortDefinition<TDocument> sortFilter;
+
+                if (options.SortMode == SortMode.Asc)
+                {
+                    sortFilter = sortBuilder.Ascending(options.SortField);
+                }
+                else
+                {
+                    sortFilter = sortBuilder.Descending(options.SortField);
+                }
+
+                queryResults.Result.Sort(sortFilter);
+            }
+
+            return queryResults;
+        }
 
         /// <summary>
         /// Set paging for search
@@ -53,6 +84,8 @@ namespace Mongo.CRUD.Builders
             queryResults.Skip(offset).Limit(options.PageSize);
             return queryResults;
         }
+        
+      
 
         /// <summary>
         /// Join filters using "AND" or "OR" operator. Default "AND"
