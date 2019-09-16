@@ -5,9 +5,9 @@ namespace Mongo.CRUD
 {
     public static class MongoExtension
     {
-        public static void AddMongoDb(IServiceCollection services,string conection)
+        public static void AddMongoDb(this IServiceCollection services,string connection)
         {
-            var mongoUrl = new MongoUrl(conection);
+            var mongoUrl = new MongoUrl(connection);
             IMongoClient client = new MongoClient(mongoUrl);
             var database = client.GetDatabase(mongoUrl.DatabaseName);
 
