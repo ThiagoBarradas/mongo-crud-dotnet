@@ -1,7 +1,6 @@
 ﻿using Mongo.CRUD.Helpers;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Linq;
 using Xunit;
 
 namespace Mongo.CRUD.Tests.Helpers
@@ -54,7 +53,7 @@ namespace Mongo.CRUD.Tests.Helpers
             MyExampleWithoutAnnotation obj = null;
 
             // act
-            Exception ex = 
+            Exception ex =
                 Assert.Throws<ArgumentNullException>(() => PropertyHelper
                     .GetIndividualPropertyDetailsByAttribute<MyExampleWithoutAnnotation, BsonIdAttribute>(obj));
 
@@ -139,7 +138,7 @@ namespace Mongo.CRUD.Tests.Helpers
         {
             // arrange
             MyExampleWithIdProperty obj = new MyExampleWithIdProperty
-            { 
+            {
                 Id = Guid.Parse("5be8f701-8358-4ea9-b2d1-5006d516da21"),
                 SomeString = "Test"
             };

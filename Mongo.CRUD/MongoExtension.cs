@@ -5,7 +5,7 @@ namespace Mongo.CRUD
 {
     public static class MongoExtension
     {
-        public static void AddMongoDb(this IServiceCollection services,string connection)
+        public static void AddMongoDb(this IServiceCollection services, string connection)
         {
             var mongoUrl = new MongoUrl(connection);
             IMongoClient client = new MongoClient(mongoUrl);
@@ -13,8 +13,8 @@ namespace Mongo.CRUD
 
             services.AddSingleton<IMongoDatabase>(database);
             services.AddSingleton<IMongoClient>(client);
-            
-            MongoCRUD.RegisterDefaultConventionPack((x)=> true);
+
+            MongoCRUD.RegisterDefaultConventionPack((x) => true);
         }
     }
 }

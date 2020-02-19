@@ -16,6 +16,6 @@ namespace Mongo.CRUD.Models
         /// <summary>
         /// Documents
         /// </summary>
-        public IEnumerable<TDocument> Documents { get; set; }
+        public List<TDocument> Documents { get; set; }
     }
 }

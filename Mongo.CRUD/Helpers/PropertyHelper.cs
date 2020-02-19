@@ -52,7 +52,7 @@ namespace Mongo.CRUD.Helpers
         /// <typeparam name="TAttribute"></typeparam>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static PropertyDetails<TAttribute> GetIndividualPropertyDetailsByAttribute<TObject, TAttribute>(this TObject obj) 
+        public static PropertyDetails<TAttribute> GetIndividualPropertyDetailsByAttribute<TObject, TAttribute>(this TObject obj)
             where TObject : class, new()
             where TAttribute : Attribute
         {
@@ -74,7 +74,7 @@ namespace Mongo.CRUD.Helpers
                         PropertyInfo = propertyInfo,
                         Value = value
                     };
-                }   
+                }
             }
 
             return null;

@@ -23,7 +23,7 @@ namespace Mongo.CRUD.Tests.Builders
 
             // act
             var result = findFluent.WithSorting(options);
-            var resultAsFakeType = (FakeFindFluent<SomeClass>) result;
+            var resultAsFakeType = (FakeFindFluent<SomeClass>)result;
 
             // assert
             Assert.NotNull(result);
@@ -187,7 +187,7 @@ namespace Mongo.CRUD.Tests.Builders
             Assert.NotNull(rendered);
             Assert.Equal(2, rendered?.Count());
             Assert.Equal(
-                "{ \"OtherProperty\" : \"somevalue\", \"SomeProperty\" : \"value\" }", 
+                "{ \"OtherProperty\" : \"somevalue\", \"SomeProperty\" : \"value\" }",
                 renderedString);
             Assert.Equal("somevalue", rendered?.FirstOrDefault().Value);
             Assert.Equal("SomeProperty", rendered?.LastOrDefault().Name);
@@ -215,12 +215,12 @@ namespace Mongo.CRUD.Tests.Builders
             Assert.NotNull(rendered);
             Assert.Single(rendered);
             Assert.Equal(
-                "{ \"$or\" : [{ \"OtherProperty\" : \"somevalue\" }, { \"SomeProperty\" : \"value\" }] }", 
+                "{ \"$or\" : [{ \"OtherProperty\" : \"somevalue\" }, { \"SomeProperty\" : \"value\" }] }",
                 renderedString);
-        }     
+        }
     }
 
-    public class SomeClass 
+    public class SomeClass
     {
         public string SomeProperty { get; set; }
 

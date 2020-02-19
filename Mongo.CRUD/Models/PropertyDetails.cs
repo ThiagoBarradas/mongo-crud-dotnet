@@ -7,7 +7,7 @@ namespace Mongo.CRUD.Models
     /// Property details from attribute
     /// </summary>
     /// <typeparam name="TAttribute"></typeparam>
-    public class PropertyDetails<TAttribute> : PropertyDetails 
+    public class PropertyDetails<TAttribute> : PropertyDetails
         where TAttribute : Attribute
     {
         /// <summary>

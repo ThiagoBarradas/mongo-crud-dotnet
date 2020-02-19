@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Mongo.CRUD.Enums;
+﻿using Mongo.CRUD.Enums;
 using Mongo.CRUD.Models;
 using MongoDB.Driver;
+using System.Threading.Tasks;
 
 namespace Mongo.CRUD.Builders
 {
@@ -39,7 +39,7 @@ namespace Mongo.CRUD.Builders
 
             return queryResults;
         }
-        
+
         /// <summary>
         /// Set sorting for search
         /// </summary>
@@ -77,6 +77,36 @@ namespace Mongo.CRUD.Builders
         /// <param name="queryResults"></param>
         /// <param name="options"></param>
         /// <returns></returns>
+        public static FindOptions<TDocument, TDocument> WithSorting<TDocument>(this FindOptions<TDocument, TDocument> findOptions, SearchOptions options)
+            where TDocument : class, new()
+        {
+            if (string.IsNullOrWhiteSpace(options.SortField) == false)
+            {
+                var sortBuilder = Builders<TDocument>.Sort;
+                SortDefinition<TDocument> sortFilter;
+
+                if (options.SortMode == SortMode.Asc)
+                {
+                    sortFilter = sortBuilder.Ascending(options.SortField);
+                }
+                else
+                {
+                    sortFilter = sortBuilder.Descending(options.SortField);
+                }
+
+                findOptions.Sort = sortFilter;
+            }
+
+            return findOptions;
+        }
+
+        /// <summary>
+        /// Set paging for search
+        /// </summary>
+        /// <typeparam name="TDocument"></typeparam>
+        /// <param name="queryResults"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static IFindFluent<TDocument, TDocument> WithPaging<TDocument>(this IFindFluent<TDocument, TDocument> queryResults, SearchOptions options)
             where TDocument : class, new()
         {
@@ -84,8 +114,22 @@ namespace Mongo.CRUD.Builders
             queryResults.Skip(offset).Limit(options.PageSize);
             return queryResults;
         }
-        
-      
+
+        /// <summary>
+        /// Set paging for search
+        /// </summary>
+        /// <typeparam name="TDocument"></typeparam>
+        /// <param name="queryResults"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public static FindOptions<TDocument, TDocument> WithPaging<TDocument>(this FindOptions<TDocument, TDocument> findOptions, SearchOptions options)
+            where TDocument : class, new()
+        {
+            var offset = (options.PageNumber - 1) * options.PageSize;
+            findOptions.Skip = offset;
+            findOptions.Limit = options.PageSize;
+            return findOptions;
+        }
 
         /// <summary>
         /// Join filters using "AND" or "OR" operator. Default "AND"
@@ -143,6 +187,17 @@ namespace Mongo.CRUD.Builders
             where TDocument : class, new()
         {
             return Builders<TDocument>.Filter;
+        }
+
+        /// <summary>
+        /// Get filter options
+        /// </summary>
+        /// <typeparam name="TDocument"></typeparam>
+        /// <returns></returns>
+        public static FindOptions<TDocument> GetFindOptions<TDocument>()
+            where TDocument : class, new()
+        {
+            return new FindOptions<TDocument>();
         }
     }
 }

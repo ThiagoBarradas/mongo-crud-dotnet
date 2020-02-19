@@ -107,7 +107,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="document"></param>
         public void Create(TDocument document)
-            => CreateAsync(document).RunSynchronously();
+            => this.CreateAsync(document).RunSynchronously();
 
         /// <summary>
         /// Create new document
@@ -127,14 +127,14 @@ namespace Mongo.CRUD
         /// Create many new documents
         /// </summary>
         /// <param name="obj"></param>
-        public void Create(IEnumerable<TDocument> documents)
-            => CreateAsync(documents).RunSynchronously();
+        public void Create(List<TDocument> documents)
+            => this.CreateAsync(documents).RunSynchronously();
 
         /// <summary>
         /// Create many new documents
         /// </summary>
         /// <param name="obj"></param>
-        public async Task CreateAsync(IEnumerable<TDocument> documents)
+        public async Task CreateAsync(List<TDocument> documents)
         {
             if (documents == null)
             {
@@ -150,7 +150,7 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Update(TDocument document)
-            => UpdateAsync(document).Result;
+            => this.UpdateAsync(document).Result;
 
         /// <summary>
         /// Update one document
@@ -167,7 +167,7 @@ namespace Mongo.CRUD
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions() {IsUpsert = false};
+            var options = new UpdateOptions() { IsUpsert = false };
 
             var actionResult = await this.Collection.ReplaceOneAsync(filter, document, options);
             return actionResult.IsAcknowledged;
@@ -180,7 +180,7 @@ namespace Mongo.CRUD
         /// <param name="partialDocument"></param>
         /// <returns></returns>
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
-            => UpdateByQueryAsync(filters, partialDocument).Result;
+            => this.UpdateByQueryAsync(filters, partialDocument).Result;
 
         /// <summary>
         /// Update one or more documents partially by filter
@@ -197,7 +197,7 @@ namespace Mongo.CRUD
                 throw new ArgumentNullException(nameof(partialDocument));
             }
 
-            var updateMapped = new BsonDocument {{"$set", partialDocument.ToBsonDocument()}};
+            var updateMapped = new BsonDocument { { "$set", partialDocument.ToBsonDocument() } };
 
             var update = new BsonDocumentUpdateDefinition<TDocument>(updateMapped);
             return (await this.Collection.UpdateManyAsync(filters, update)).IsAcknowledged;
@@ -209,7 +209,7 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Upsert(TDocument document)
-            => UpsertAsync(document).Result;
+            => this.UpsertAsync(document).Result;
 
         /// <summary>
         /// Update if exists or create new document
@@ -226,7 +226,7 @@ namespace Mongo.CRUD
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions {IsUpsert = true};
+            var options = new UpdateOptions { IsUpsert = true };
 
             return (await this.Collection.ReplaceOneAsync(filter, document, options)).IsAcknowledged;
         }
@@ -237,7 +237,7 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public bool Delete(object id)
-            => DeleteAsync(id).Result;
+            => this.DeleteAsync(id).Result;
 
         /// <summary>
         /// Delete document by id
@@ -261,7 +261,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <returns></returns>
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
-            => DeleteByQueryAsync(filters).Result;
+            => this.DeleteByQueryAsync(filters).Result;
 
         /// <summary>
         /// Delete by query
@@ -275,43 +275,13 @@ namespace Mongo.CRUD
             return (await this.Collection.DeleteManyAsync(filters)).IsAcknowledged;
         }
 
-
-        /// <summary>
-        /// Search documents by filters, with paging and sorting
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null)
-        {
-            if (options == null)
-            {
-                options = new SearchOptions();
-            }
-
-            filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
-
-            var documents = this.Collection.Find(filters)
-                .WithPaging(options)
-                .WithSorting(options);
-
-            var count = this.Collection.CountDocuments(filters);
-
-            return new SearchResult<TDocument>
-            {
-                Count = count,
-                Documents = documents.ToEnumerable()
-            };
-        }
-
         /// <summary>
         /// Get document by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public TDocument Get(object id)
-            => GetAsync(id).Result;
-
+            => this.GetAsync(id).Result;
 
         /// <summary>
         /// Get document by id
@@ -330,21 +300,57 @@ namespace Mongo.CRUD
         }
 
         /// <summary>
-        /// Search documents by expression, with paging and sorting
+        /// Search documents by expression
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public IEnumerable<TDocument> Search(Expression<Func<TDocument, bool>> filters)
-            => SearchAsync(filters).Result;
+        public List<TDocument> Search(Expression<Func<TDocument, bool>> filters)
+            => this.SearchAsync(filters).Result;
 
         /// <summary>
         /// Search documents by expression, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters)
+        public async Task<List<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters)
         {
             return await this.Collection.FindAsync(filters).Result.ToListAsync();
+        }
+
+        /// <summary>
+        /// Search documents by filters, with paging and sorting
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null)
+            => this.SearchAsync(filters, options).Result;
+
+        /// <summary>
+        /// Search documents by filters, with paging and sorting
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        public async Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null)
+        {
+            if (options == null)
+            {
+                options = new SearchOptions();
+            }
+
+            filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
+
+            var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithPaging(options).WithSorting(options);
+
+            var documents = await this.Collection.FindAsync(filters, findOptions);
+            var count = await this.Collection.CountDocumentsAsync(filters);
+
+            return new SearchResult<TDocument>
+            {
+                Count = count,
+                Documents = documents.ToList()
+            };
         }
 
         /// <summary>
@@ -397,7 +403,7 @@ namespace Mongo.CRUD
             this.Database = this.MongoClient.GetDatabase(database);
 
             var currentType = typeof(TDocument);
-            var collectionNameAttribute = (CollectionNameAttribute) currentType
+            var collectionNameAttribute = (CollectionNameAttribute)currentType
                 .GetCustomAttributes(typeof(CollectionNameAttribute), false).FirstOrDefault();
 
             var collectionName = collectionNameAttribute?.CollectionName ?? currentType.Name;

@@ -69,7 +69,7 @@ namespace Mongo.CRUD.Tests
 
             // act
             Exception ex =
-                Assert.Throws<ArgumentNullException>(() => 
+                Assert.Throws<ArgumentNullException>(() =>
                 new MongoCRUD<GenericTestWithIdProperty>(client, database));
 
 
@@ -120,7 +120,7 @@ namespace Mongo.CRUD.Tests
 
             // act
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(client, database);
-            
+
             // assert
             Assert.NotNull(mongoCRUD);
             Assert.NotNull(mongoCRUD.MongoClient);
@@ -376,7 +376,7 @@ namespace Mongo.CRUD.Tests
             // arrange
             var mongoClient = FakeMongoClient.GetMongoClientMock<GenericTestWithIdProperty>(true).Object;
             var mongoCRUD = new MongoCRUD<GenericTestWithIdProperty>(mongoClient, "SomeDB");
-            var document = new 
+            var document = new
             {
                 Id = "123",
                 SomeTest = "test"

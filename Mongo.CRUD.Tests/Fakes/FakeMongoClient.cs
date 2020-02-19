@@ -58,7 +58,7 @@ namespace Mongo.CRUD.Tests.Fakes
 
             // Cursor
             var cursorMock = new Mock<MongoDB.Driver.IAsyncCursor<T>>();
-            cursorMock.Setup(m => m.Current).Returns(items); 
+            cursorMock.Setup(m => m.Current).Returns(items);
             cursorMock
                 .SetupSequence(m => m.MoveNext(It.IsAny<CancellationToken>()))
                 .Returns(true)
@@ -102,7 +102,7 @@ namespace Mongo.CRUD.Tests.Fakes
                 .Returns(cursorMock.Object);
 
             // Mongo Database
-            Mock <MongoDB.Driver.IMongoDatabase> databaseMock = new Mock<MongoDB.Driver.IMongoDatabase>();
+            Mock<MongoDB.Driver.IMongoDatabase> databaseMock = new Mock<MongoDB.Driver.IMongoDatabase>();
             databaseMock
                 .Setup(m => m.GetCollection<T>(typeof(T).Name, null))
                 .Returns(collectionMock.Object);

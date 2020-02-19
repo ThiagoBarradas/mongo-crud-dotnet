@@ -56,7 +56,7 @@ namespace Mongo.CRUD.Tests.Fakes
             {
                 this.SortValues.Add(item.Name, (item.Value > 0) ? SortMode.Asc : SortMode.Desc);
             }
-            
+
             return this;
         }
 

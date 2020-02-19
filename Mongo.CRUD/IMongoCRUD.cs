@@ -1,6 +1,6 @@
-﻿using System;
-using Mongo.CRUD.Models;
+﻿using Mongo.CRUD.Models;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -39,13 +39,13 @@ namespace Mongo.CRUD
         /// Create many new documents
         /// </summary>
         /// <param name="obj"></param>
-        void Create(IEnumerable<TDocument> objs);
+        void Create(List<TDocument> objs);
 
         /// <summary>
         /// Create many new documents
         /// </summary>
         /// <param name="obj"></param>
-        Task CreateAsync(IEnumerable<TDocument> objs);
+        Task CreateAsync(List<TDocument> objs);
 
         /// <summary>
         /// Update one document
@@ -128,6 +128,14 @@ namespace Mongo.CRUD
         SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null);
 
         /// <summary>
+        /// Search documents by filters, with paging and sorting
+        /// </summary>
+        /// <param name="filters"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null)
+
+        /// <summary>
         /// Get document by id
         /// </summary>
         /// <param name="id"></param>
@@ -147,14 +155,14 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        IEnumerable<TDocument> Search(Expression<Func<TDocument, bool>> filters);
-        
-        
+        List<TDocument> Search(Expression<Func<TDocument, bool>> filters);
+
+
         /// <summary>
         /// Search documents by expression, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        Task<IEnumerable<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters);
+        Task<List<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters);
     }
 }
