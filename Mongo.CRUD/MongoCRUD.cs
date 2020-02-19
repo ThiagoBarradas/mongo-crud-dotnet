@@ -107,7 +107,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="document"></param>
         public void Create(TDocument document)
-            => this.CreateAsync(document).RunSynchronously();
+            => this.CreateAsync(document).GetAwaiter().GetResult();
 
         /// <summary>
         /// Create new document
@@ -128,7 +128,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="obj"></param>
         public void Create(List<TDocument> documents)
-            => this.CreateAsync(documents).RunSynchronously();
+            => this.CreateAsync(documents).GetAwaiter().GetResult();
 
         /// <summary>
         /// Create many new documents
@@ -150,7 +150,7 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Update(TDocument document)
-            => this.UpdateAsync(document).Result;
+            => this.UpdateAsync(document).GetAwaiter().GetResult();
 
         /// <summary>
         /// Update one document
@@ -180,7 +180,7 @@ namespace Mongo.CRUD
         /// <param name="partialDocument"></param>
         /// <returns></returns>
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
-            => this.UpdateByQueryAsync(filters, partialDocument).Result;
+            => this.UpdateByQueryAsync(filters, partialDocument).GetAwaiter().GetResult();
 
         /// <summary>
         /// Update one or more documents partially by filter

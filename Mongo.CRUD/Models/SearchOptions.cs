@@ -27,6 +27,24 @@ namespace Mongo.CRUD.Models
         public int PageSize { get; set; }
 
         /// <summary>
+        /// Page number
+        /// </summary>
+        public int Page
+        {
+            get { return this.PageNumber; }
+            set { this.PageNumber = value; }
+        }
+
+        /// <summary>
+        /// Page size
+        /// </summary>
+        public int Size
+        {
+            get { return this.PageSize; }
+            set { this.PageSize = value; }
+        }
+
+        /// <summary>
         /// Sort mode
         /// </summary>
         public SortMode SortMode { get; set; }

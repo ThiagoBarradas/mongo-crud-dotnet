@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -28,28 +29,28 @@ namespace Mongo.CRUD.Tests.Fakes
 
             // Update
             collectionMock
-                .Setup(m => m.ReplaceOne(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), It.IsAny<T>(), It.IsAny<MongoDB.Driver.UpdateOptions>(), default(CancellationToken)))
-                .Returns(new SuccesReplaceOneResult(boolOperationsResult));
+                .Setup(m => m.ReplaceOneAsync(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), It.IsAny<T>(), It.IsAny<MongoDB.Driver.UpdateOptions>(), default(CancellationToken)))
+                .Returns(new Task<ReplaceOneResult>(() => { return new SuccesReplaceOneResult(boolOperationsResult); }));
 
             // UpdateMany
             collectionMock
-                .Setup(m => m.UpdateMany(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), It.IsAny<MongoDB.Driver.BsonDocumentUpdateDefinition<T>>(), It.IsAny<MongoDB.Driver.UpdateOptions>(), default(CancellationToken)))
-                .Returns(new SuccesUpdateResult(boolOperationsResult));
+                .Setup(m => m.UpdateManyAsync(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), It.IsAny<MongoDB.Driver.BsonDocumentUpdateDefinition<T>>(), It.IsAny<MongoDB.Driver.UpdateOptions>(), default(CancellationToken)))
+                .Returns(new Task<UpdateResult>(() => { return new SuccesUpdateResult(boolOperationsResult); }));
 
             // Delete
             collectionMock
-                .Setup(m => m.DeleteOne(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), default(CancellationToken)))
-                .Returns(new SuccesDeleteResult(boolOperationsResult));
+                .Setup(m => m.DeleteOneAsync(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), default(CancellationToken)))
+                .Returns(new Task<DeleteResult>(() => { return new SuccesDeleteResult(boolOperationsResult); }));
 
             // DeleteMany
             collectionMock
-                .Setup(m => m.DeleteMany(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), default(CancellationToken)))
-                .Returns(new SuccesDeleteResult(boolOperationsResult));
+                .Setup(m => m.DeleteManyAsync(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), default(CancellationToken)))
+                .Returns(new Task<DeleteResult>(() => { return new SuccesDeleteResult(boolOperationsResult); }));
 
             // CountDocuments
             collectionMock
-                .Setup(m => m.CountDocuments(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), It.IsAny<MongoDB.Driver.CountOptions>(), default(CancellationToken)))
-                .Returns(searchSizeResult);
+                .Setup(m => m.CountDocumentsAsync(It.IsAny<MongoDB.Driver.FilterDefinition<T>>(), It.IsAny<MongoDB.Driver.CountOptions>(), default(CancellationToken)))
+                .Returns(new Task<long>(() => searchSizeResult));
 
             // Fake Items
             List<T> items = new List<T>();
