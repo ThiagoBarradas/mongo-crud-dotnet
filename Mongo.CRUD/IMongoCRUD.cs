@@ -155,7 +155,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        List<TDocument> Search(Expression<Func<TDocument, bool>> filters);
+        SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null);
 
 
         /// <summary>
@@ -163,6 +163,6 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        Task<List<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters);
+        Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null);
     }
 }

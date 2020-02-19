@@ -304,17 +304,26 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public List<TDocument> Search(Expression<Func<TDocument, bool>> filters)
-            => this.SearchAsync(filters).Result;
+        public SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null)
+            => this.SearchAsync(filters, options).Result;
 
         /// <summary>
         /// Search documents by expression, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        public async Task<List<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters)
+        public async Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null)
         {
-            return await this.Collection.FindAsync(filters).Result.ToListAsync();
+            var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithPaging(options).WithSorting(options);
+
+            var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync(); 
+            var count = await this.Collection.CountDocumentsAsync(filters);
+
+            return new SearchResult<TDocument>
+            {
+                Count = count,
+                Documents = documents
+            };
         }
 
         /// <summary>
@@ -343,13 +352,13 @@ namespace Mongo.CRUD
 
             var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithPaging(options).WithSorting(options);
 
-            var documents = await this.Collection.FindAsync(filters, findOptions);
+            var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
             var count = await this.Collection.CountDocumentsAsync(filters);
 
             return new SearchResult<TDocument>
             {
                 Count = count,
-                Documents = documents.ToList()
+                Documents = documents
             };
         }
 
