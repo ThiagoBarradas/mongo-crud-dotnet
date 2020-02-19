@@ -18,11 +18,13 @@ namespace Mongo.CRUD.Tests.Fakes
 
             // Create
             collectionMock
-                .Setup(m => m.InsertOne(It.IsAny<T>(), null, default(CancellationToken)));
+                .Setup(m => m.InsertOne(It.IsAny<T>(), null, default(CancellationToken)))
+                .Returns(Task.CompletedTask); ;
 
             // CreateMany
             collectionMock
-                .Setup(m => m.InsertMany(It.IsAny<IEnumerable<T>>(), null, default(CancellationToken)));
+                .Setup(m => m.InsertManyAsync(It.IsAny<IEnumerable<T>>(), null, default(CancellationToken)))
+                .Returns(Task.CompletedTask);
 
             // Update
             collectionMock
