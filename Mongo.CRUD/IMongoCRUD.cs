@@ -133,7 +133,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null)
+        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null);
 
         /// <summary>
         /// Get document by id
