@@ -314,6 +314,11 @@ namespace Mongo.CRUD
         /// <returns></returns>
         public async Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null)
         {
+            if (options == null)
+            {
+                options = new SearchOptions();
+            }
+
             var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithPaging(options).WithSorting(options);
 
             var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync(); 
