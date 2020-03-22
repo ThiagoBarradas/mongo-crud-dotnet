@@ -31,12 +31,12 @@ namespace Mongo.CRUD
         /// <summary>
         /// MongoDatabase from mongo driver
         /// </summary>
-        private IMongoDatabase Database { get; set; }
+        public IMongoDatabase Database { get; set; }
 
         /// <summary>
         /// MongoCollection<T> from mongo driver
         /// </summary>
-        private IMongoCollection<TDocument> Collection { get; set; }
+        public IMongoCollection<TDocument> Collection { get; set; }
 
         /// <summary>
         /// MongoCRUD configuration private object

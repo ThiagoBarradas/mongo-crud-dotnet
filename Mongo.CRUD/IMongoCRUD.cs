@@ -14,6 +14,16 @@ namespace Mongo.CRUD
     public interface IMongoCRUD<TDocument> where TDocument : class, new()
     {
         /// <summary>
+        /// MongoDatabase
+        /// </summary>
+        IMongoDatabase Database { get; set; }
+
+        /// <summary>
+        /// MongoCollection<T> from mongo driver
+        /// </summary>
+        IMongoCollection<TDocument> Collection { get; set; }
+
+        /// <summary>
         /// MongoCRUD configuration with connection string and database name
         /// </summary>
         MongoConfiguration Configuration { get; set; }
