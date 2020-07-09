@@ -58,7 +58,7 @@ namespace Mongo.CRUD.Tests.Helpers
                     .GetIndividualPropertyDetailsByAttribute<MyExampleWithoutAnnotation, BsonIdAttribute>(obj));
 
             // assert
-            Assert.Equal("Value cannot be null.\r\nParameter name: obj", ex.Message);
+            Assert.Equal("Value cannot be null.\nParameter name: obj", ex.Message.Replace("\r", ""));
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace Mongo.CRUD.Tests.Helpers
                     .GetIndividualPropertyDetailsByPropertyName(obj, "UniqueId"));
 
             // assert
-            Assert.Equal("Value cannot be null.\r\nParameter name: obj", ex.Message);
+            Assert.Equal("Value cannot be null.\nParameter name: obj", ex.Message.Replace("\r", ""));
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace Mongo.CRUD.Tests.Helpers
                     .GetIndividualPropertyDetailsByPropertyName(obj, null));
 
             // assert
-            Assert.Equal("Value cannot be null.\r\nParameter name: propertyName", ex.Message);
+            Assert.Equal("Value cannot be null.\nParameter name: propertyName", ex.Message.Replace("\r", ""));
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace Mongo.CRUD.Tests.Helpers
                     .GetIndividualPropertyDetailsByPropertyName(obj, ""));
 
             // assert
-            Assert.Equal("Value cannot be null.\r\nParameter name: propertyName", ex.Message);
+            Assert.Equal("Value cannot be null.\nParameter name: propertyName", ex.Message.Replace("\r", ""));
         }
     }
 
