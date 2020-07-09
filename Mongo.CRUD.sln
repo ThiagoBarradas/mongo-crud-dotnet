@@ -1,21 +1,32 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mongo.CRUD", "Mongo.CRUD\Mongo.CRUD.csproj", "{7460134B-58A9-416B-90DD-1E8A510E66BA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mongo.CRUD.Tests", "Mongo.CRUD.Tests\Mongo.CRUD.Tests.csproj", "{600F9A60-959B-4445-9A36-33899C17FCDC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A4A47727-F672-4B3C-80E4-26CE14A6AC23}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{AE0B90F1-2603-4C38-922A-305E2C8412A4}"
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{85542621-09E9-4E50-A939-AE99E7AE2AEF}"
+	ProjectSection(SolutionItems) = preProject
 		.github\CONTRIBUTING.md = .github\CONTRIBUTING.md
 		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
+		LICENSE = LICENSE
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "devops", "devops", "{DF0C8A09-6693-40F6-A36E-6D763CB21AAA}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
 Global
@@ -35,6 +46,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AE0B90F1-2603-4C38-922A-305E2C8412A4} = {A4A47727-F672-4B3C-80E4-26CE14A6AC23}
+		{85542621-09E9-4E50-A939-AE99E7AE2AEF} = {A4A47727-F672-4B3C-80E4-26CE14A6AC23}
+		{DF0C8A09-6693-40F6-A36E-6D763CB21AAA} = {A4A47727-F672-4B3C-80E4-26CE14A6AC23}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C22D0A37-353D-4C35-8DA4-E6B88EA4B765}
