@@ -1,6 +1,5 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d1d4c2ef4ee5433ea91f874483b55119)](https://www.codacy.com/app/ThiagoBarradas/mongo-crud-dotnet?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ThiagoBarradas/mongo-crud-dotnet&amp;utm_campaign=Badge_Grade)
-[![Build status](https://ci.appveyor.com/api/projects/status/3ytedkys4s6h83k0/branch/master?svg=true)](https://ci.appveyor.com/project/ThiagoBarradas/mongo-crud-dotnet/branch/master)
-[![codecov](https://codecov.io/gh/ThiagoBarradas/mongo-crud-dotnet/branch/master/graph/badge.svg)](https://codecov.io/gh/ThiagoBarradas/mongo-crud-dotnet)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_mongo-crud-dotnet&metric=alert_status)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_mongo-crud-dotnet)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_mongo-crud-dotnet&metric=coverage)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_mongo-crud-dotnet)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Mongo.CRUD.svg)](https://www.nuget.org/packages/Mongo.CRUD/)
 [![NuGet Version](https://img.shields.io/nuget/v/Mongo.CRUD.svg)](https://www.nuget.org/packages/Mongo.CRUD/)
 
