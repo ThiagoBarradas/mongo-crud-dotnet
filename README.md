@@ -1,3 +1,4 @@
+[![Build Status](https://barradas.visualstudio.com/Contributions/_apis/build/status/NugetPackage/Mongo%20CRUD?branchName=develop)](https://barradas.visualstudio.com/Contributions/_build/latest?definitionId=19&branchName=develop)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_mongo-crud-dotnet&metric=alert_status)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_mongo-crud-dotnet)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_mongo-crud-dotnet&metric=coverage)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_mongo-crud-dotnet)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Mongo.CRUD.svg)](https://www.nuget.org/packages/Mongo.CRUD/)
