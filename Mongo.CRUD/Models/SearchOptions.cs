@@ -10,10 +10,11 @@ namespace Mongo.CRUD.Models
         /// <summary>
         /// Contructor
         /// </summary>
-        public SearchOptions(int pageNumber = 1, int pageSize = 10)
+        public SearchOptions(int pageNumber = 1, int pageSize = 10, bool enablePagination = true)
         {
             this.PageNumber = pageNumber;
             this.PageSize = pageSize;
+            this.EnablePagination = enablePagination;
         }
 
         /// <summary>
@@ -53,5 +54,10 @@ namespace Mongo.CRUD.Models
         /// Sort field
         /// </summary>
         public string SortField { get; set; }
+
+        /// <summary>
+        /// Enable pagination. Default is true.
+        /// </summary>
+        public bool EnablePagination { get; set; }
     }
 }
