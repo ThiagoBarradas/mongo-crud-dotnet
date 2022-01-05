@@ -328,7 +328,7 @@ namespace Mongo.CRUD
 
             var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
 
-            var count = documents.Count <= options.PageSize || !options.EnablePagination ?
+            var count = (documents.Count <= options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
                 documents.Count :
                 await this.Collection.CountDocumentsAsync(filters);
 
@@ -372,7 +372,7 @@ namespace Mongo.CRUD
 
             var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
 
-            var count = documents.Count <= options.PageSize || !options.EnablePagination ?
+            var count = (documents.Count <= options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
                 documents.Count :
                 await this.Collection.CountDocumentsAsync(filters);
 
