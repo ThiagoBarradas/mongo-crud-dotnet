@@ -319,10 +319,18 @@ namespace Mongo.CRUD
                 options = new SearchOptions();
             }
 
-            var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithPaging(options).WithSorting(options);
+            var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithSorting(options);
 
-            var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync(); 
-            var count = await this.Collection.CountDocumentsAsync(filters);
+            if (options.EnablePagination)
+            {
+                findOptions.WithPaging(options);
+            }
+
+            var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
+
+            var count = (documents.Count < options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
+                documents.Count :
+                await this.Collection.CountDocumentsAsync(filters);
 
             return new SearchResult<TDocument>
             {
@@ -355,10 +363,18 @@ namespace Mongo.CRUD
 
             filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
-            var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithPaging(options).WithSorting(options);
+            var findOptions = FilterBuilder.GetFindOptions<TDocument>().WithSorting(options);
+
+            if (options.EnablePagination)
+            {
+                findOptions.WithPaging(options);
+            }
 
             var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
-            var count = await this.Collection.CountDocumentsAsync(filters);
+
+            var count = (documents.Count < options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
+                documents.Count :
+                await this.Collection.CountDocumentsAsync(filters);
 
             return new SearchResult<TDocument>
             {
