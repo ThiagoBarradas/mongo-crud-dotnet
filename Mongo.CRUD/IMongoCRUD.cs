@@ -135,7 +135,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null);
+        SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
 
         /// <summary>
         /// Search documents by filters, with paging and sorting
@@ -143,7 +143,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null);
+        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
 
         /// <summary>
         /// Get document by id
@@ -165,7 +165,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null);
+        SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
 
 
         /// <summary>
@@ -173,6 +173,6 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <returns></returns>
-        Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null);
+        Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
     }
 }
