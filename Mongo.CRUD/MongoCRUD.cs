@@ -357,7 +357,7 @@ namespace Mongo.CRUD
         /// Search documents by filters, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
-        /// <param name="options"></param>
+        /// <param name="options"></param> 
         /// <returns></returns>
         public async Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
         {
