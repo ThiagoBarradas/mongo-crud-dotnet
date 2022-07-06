@@ -209,7 +209,7 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Upsert(TDocument document)
-            => this.UpsertAsync(document).Result;
+            => this.UpsertAsync(document).GetAwaiter().GetResult();
 
         /// <summary>
         /// Update if exists or create new document
@@ -237,7 +237,7 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public bool Delete(object id)
-            => this.DeleteAsync(id).Result;
+            => this.DeleteAsync(id).GetAwaiter().GetResult();
 
         /// <summary>
         /// Delete document by id
@@ -261,7 +261,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <returns></returns>
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
-            => this.DeleteByQueryAsync(filters).Result;
+            => this.DeleteByQueryAsync(filters).GetAwaiter().GetResult();
 
         /// <summary>
         /// Delete by query
@@ -281,7 +281,7 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public TDocument Get(object id)
-            => this.GetAsync(id).Result;
+            => this.GetAsync(id).GetAwaiter().GetResult();
 
         /// <summary>
         /// Get document by id
@@ -305,7 +305,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <returns></returns>
         public SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
-            => this.SearchAsync(filters, options, projectionOptions).Result;
+            => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
 
         /// <summary>
         /// Search documents by expression, with paging and sorting
@@ -331,7 +331,7 @@ namespace Mongo.CRUD
                 findOptions.Projection = projectionOptions.BuildProjectionByFields<TDocument>();
             }
 
-            var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
+            var documents = await this.Collection.FindAsync(filters, findOptions).GetAwaiter().GetResult().ToListAsync();
 
             var count = (documents.Count < options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
                 documents.Count :
@@ -351,13 +351,13 @@ namespace Mongo.CRUD
         /// <param name="options"></param>
         /// <returns></returns>
         public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
-            => this.SearchAsync(filters, options, projectionOptions).Result;
+            => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
 
         /// <summary>
         /// Search documents by filters, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
-        /// <param name="options"></param> 
+        /// <param name="options"></param>
         /// <returns></returns>
         public async Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
         {
@@ -380,8 +380,8 @@ namespace Mongo.CRUD
                 findOptions.Projection = projectionOptions.BuildProjectionByFields<TDocument>();
             }
 
-            var documents = await this.Collection.FindAsync(filters, findOptions).Result.ToListAsync();
-
+            var documents = await this.Collection.FindAsync(filters, findOptions).GetAwaiter().GetResult().ToListAsync();
+            
             var count = (documents.Count < options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
                 documents.Count :
                 await this.Collection.CountDocumentsAsync(filters);
