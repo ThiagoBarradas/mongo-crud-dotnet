@@ -107,7 +107,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="document"></param>
         public void Create(TDocument document)
-            => this.CreateAsync(document).GetAwaiter().GetResult();
+            => this.CreateAsync(document).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Create new document
@@ -128,7 +128,7 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="obj"></param>
         public void Create(List<TDocument> documents)
-            => this.CreateAsync(documents).GetAwaiter().GetResult();
+            => this.CreateAsync(documents).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Create many new documents
@@ -150,7 +150,7 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Update(TDocument document)
-            => this.UpdateAsync(document).GetAwaiter().GetResult();
+            => this.UpdateAsync(document).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Update one document
@@ -180,7 +180,7 @@ namespace Mongo.CRUD
         /// <param name="partialDocument"></param>
         /// <returns></returns>
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
-            => this.UpdateByQueryAsync(filters, partialDocument).GetAwaiter().GetResult();
+            => this.UpdateByQueryAsync(filters, partialDocument).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Update one or more documents partially by filter
@@ -209,7 +209,7 @@ namespace Mongo.CRUD
         /// <param name="document"></param>
         /// <returns></returns>
         public bool Upsert(TDocument document)
-            => this.UpsertAsync(document).GetAwaiter().GetResult();
+            => this.UpsertAsync(document).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Update if exists or create new document
@@ -237,7 +237,7 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public bool Delete(object id)
-            => this.DeleteAsync(id).GetAwaiter().GetResult();
+            => this.DeleteAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Delete document by id
@@ -261,7 +261,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <returns></returns>
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
-            => this.DeleteByQueryAsync(filters).GetAwaiter().GetResult();
+            => this.DeleteByQueryAsync(filters).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Delete by query
@@ -281,7 +281,7 @@ namespace Mongo.CRUD
         /// <param name="id"></param>
         /// <returns></returns>
         public TDocument Get(object id)
-            => this.GetAsync(id).GetAwaiter().GetResult();
+            => this.GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Get document by id
@@ -305,7 +305,7 @@ namespace Mongo.CRUD
         /// <param name="filters"></param>
         /// <returns></returns>
         public SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
-            => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
+            => this.SearchAsync(filters, options, projectionOptions).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Search documents by expression, with paging and sorting
@@ -351,7 +351,7 @@ namespace Mongo.CRUD
         /// <param name="options"></param>
         /// <returns></returns>
         public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
-            => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
+            => this.SearchAsync(filters, options, projectionOptions).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <summary>
         /// Search documents by filters, with paging and sorting
