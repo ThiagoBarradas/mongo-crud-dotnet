@@ -42,7 +42,7 @@ namespace Mongo.CRUD.Helpers
                 var properties = key.Type.GetProperties();
                 for (int i = 0; i < properties.Length; i++)
                 {
-                    if (properties[i].Name.Equals(key.PropertyName, StringComparison.OrdinalIgnoreCase))
+                    if (properties[i].Name.Equals(key.PropertyName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return properties[i];
                     }
