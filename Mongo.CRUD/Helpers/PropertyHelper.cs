@@ -37,18 +37,10 @@ namespace Mongo.CRUD.Helpers
                 throw new ArgumentNullException(nameof(propertyName));
             }
 
-            var propertyInfo = PropertyInfoByNameCache.GetOrAdd((obj.GetType(), propertyName.Trim()), (key) =>
-            {
-                var properties = key.Type.GetProperties();
-                for (int i = 0; i < properties.Length; i++)
-                {
-                    if (properties[i].Name.Equals(key.PropertyName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        return properties[i];
-                    }
-                }
-                return null;
-            });
+            var propertyInfo = PropertyInfoByNameCache.GetOrAdd(
+                (obj.GetType(), propertyName.Trim()),
+                (key) => key.Type.GetProperty(key.PropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance));
+
             if (propertyInfo != null)
             {
                 var value = propertyInfo.GetValue(obj);
