@@ -61,8 +61,10 @@ namespace Mongo.CRUD.Tests.Helpers
             Assert.Equal("Value cannot be null. (Parameter 'obj')", ex.Message.Replace("\r", ""));
         }
 
-        [Fact]
-        public static void GetIndividualPropertyDetailsByPropertyName_Should_Get_Value()
+        [Theory]
+        [InlineData(nameof(MyExampleWithIdProperty.Id))]
+        [InlineData("id")]
+        public static void GetIndividualPropertyDetailsByPropertyName_Should_Get_Value(string propertyName)
         {
             // arrange
             MyExampleWithIdProperty obj = new MyExampleWithIdProperty
@@ -73,7 +75,7 @@ namespace Mongo.CRUD.Tests.Helpers
 
             // act
             var result = PropertyHelper
-                .GetIndividualPropertyDetailsByPropertyName(obj, nameof(MyExampleWithIdProperty.Id));
+                .GetIndividualPropertyDetailsByPropertyName(obj, propertyName);
 
             // assert
             Assert.NotNull(result);
