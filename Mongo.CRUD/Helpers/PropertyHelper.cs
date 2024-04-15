@@ -1,6 +1,8 @@
 ﻿using Mongo.CRUD.Models;
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
+using System.Reflection;
 
 namespace Mongo.CRUD.Helpers
 {
@@ -9,6 +11,12 @@ namespace Mongo.CRUD.Helpers
     /// </summary>
     public static class PropertyHelper
     {
+        private static readonly ConcurrentDictionary<(Type Type, string PropertyName), PropertyInfo> PropertyInfoByNameCache
+            = new ConcurrentDictionary<(Type, string), PropertyInfo>();
+
+        private static readonly ConcurrentDictionary<(Type Type, Type AttributeType), (PropertyInfo PropertyInfo, Attribute[] Attributes)> PropertyInfoByAttributeCache
+            = new ConcurrentDictionary<(Type, Type), (PropertyInfo, Attribute[])>();
+
         /// <summary>
         /// Get single property details by property name
         /// </summary>
@@ -29,19 +37,19 @@ namespace Mongo.CRUD.Helpers
                 throw new ArgumentNullException(nameof(propertyName));
             }
 
-            foreach (var propertyInfo in obj.GetType().GetProperties())
-            {
-                if (propertyInfo.Name.ToLowerInvariant() == propertyName.Trim().ToLowerInvariant())
-                {
-                    var value = propertyInfo.GetValue(obj);
-                    return new PropertyDetails
-                    {
-                        PropertyInfo = propertyInfo,
-                        Value = value
-                    };
-                }
-            }
+            var propertyInfo = PropertyInfoByNameCache.GetOrAdd(
+                (obj.GetType(), propertyName.Trim()),
+                (key) => key.Type.GetProperty(key.PropertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance));
 
+            if (propertyInfo != null)
+            {
+                var value = propertyInfo.GetValue(obj);
+                return new PropertyDetails
+                {
+                    PropertyInfo = propertyInfo,
+                    Value = value
+                };
+            }
             return null;
         }
 
@@ -61,20 +69,28 @@ namespace Mongo.CRUD.Helpers
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            foreach (var propertyInfo in obj.GetType().GetProperties())
+            var (propertyInfo, attributes) = PropertyInfoByAttributeCache.GetOrAdd((obj.GetType(), typeof(TAttribute)), (key) =>
             {
-                TAttribute[] attributes = (TAttribute[])propertyInfo.GetCustomAttributes(typeof(TAttribute), true);
-
-                if (attributes != null & attributes.Any())
+                var properties = key.Type.GetProperties();
+                for (int i = 0; i < properties.Length; i++)
                 {
-                    var value = propertyInfo.GetValue(obj);
-                    return new PropertyDetails<TAttribute>
+                    var attrs = (Attribute[])properties[i].GetCustomAttributes(key.AttributeType, true);
+                    if (attrs != null & attrs.Any())
                     {
-                        Attributes = attributes,
-                        PropertyInfo = propertyInfo,
-                        Value = value
-                    };
+                        return (properties[i], attrs);
+                    }
                 }
+                return (null, null);
+            });
+            if (propertyInfo != null && attributes != null) 
+            {
+                var value = propertyInfo.GetValue(obj);
+                return new PropertyDetails<TAttribute>
+                {
+                    Attributes = (TAttribute[])attributes,
+                    PropertyInfo = propertyInfo,
+                    Value = value
+                };
             }
 
             return null;
