@@ -105,7 +105,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public void Create(TDocument document)
-            => this.CreateAsync(document).GetAwaiter().GetResult();
+            => this.CreateAsync(document).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task CreateAsync(TDocument document, CancellationToken cancellationToken = default)
@@ -120,7 +120,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public void Create(List<TDocument> documents)
-            => this.CreateAsync(documents).GetAwaiter().GetResult();
+            => this.CreateAsync(documents).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task CreateAsync(List<TDocument> documents, CancellationToken cancellationToken = default)
@@ -135,7 +135,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public bool Update(TDocument document)
-            => this.UpdateAsync(document).GetAwaiter().GetResult();
+            => this.UpdateAsync(document).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<bool> UpdateAsync(TDocument document, CancellationToken cancellationToken = default)
@@ -156,7 +156,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
-            => this.UpdateByQueryAsync(filters, partialDocument).GetAwaiter().GetResult();
+            => this.UpdateByQueryAsync(filters, partialDocument).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<bool> UpdateByQueryAsync(FilterDefinition<TDocument> filters, object partialDocument, CancellationToken cancellationToken = default)
@@ -176,7 +176,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public bool Upsert(TDocument document)
-            => this.UpsertAsync(document).GetAwaiter().GetResult();
+            => this.UpsertAsync(document).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<bool> UpsertAsync(TDocument document, CancellationToken cancellationToken = default)
@@ -196,7 +196,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public bool Delete(object id)
-            => this.DeleteAsync(id).GetAwaiter().GetResult();
+            => this.DeleteAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<bool> DeleteAsync(object id, CancellationToken cancellationToken = default)
@@ -212,7 +212,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
-            => this.DeleteByQueryAsync(filters).GetAwaiter().GetResult();
+            => this.DeleteByQueryAsync(filters).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<bool> DeleteByQueryAsync(FilterDefinition<TDocument> filters, CancellationToken cancellationToken = default)
@@ -224,7 +224,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public TDocument Get(object id)
-            => this.GetAsync(id).GetAwaiter().GetResult();
+            => this.GetAsync(id).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<TDocument> GetAsync(object id, CancellationToken cancellationToken = default)
@@ -240,7 +240,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
-            => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
+            => this.SearchAsync(filters, options, projectionOptions).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null, CancellationToken cancellationToken = default)
@@ -278,7 +278,7 @@ namespace Mongo.CRUD
 
         /// <inheritdoc />
         public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
-            => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
+            => this.SearchAsync(filters, options, projectionOptions).ConfigureAwait(false).GetAwaiter().GetResult();
 
         /// <inheritdoc />
         public async Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null, CancellationToken cancellationToken = default)
