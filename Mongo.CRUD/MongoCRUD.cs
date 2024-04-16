@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mongo.CRUD
@@ -102,62 +103,42 @@ namespace Mongo.CRUD
             this.Configuration = configuration;
         }
 
-        /// <summary>
-        /// Create new document
-        /// </summary>
-        /// <param name="document"></param>
+        /// <inheritdoc />
         public void Create(TDocument document)
             => this.CreateAsync(document).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Create new document
-        /// </summary>
-        /// <param name="document"></param>
-        public async Task CreateAsync(TDocument document)
+        /// <inheritdoc />
+        public async Task CreateAsync(TDocument document, CancellationToken cancellationToken = default)
         {
             if (document == null)
             {
                 throw new ArgumentNullException(nameof(document));
             }
 
-            await this.Collection.InsertOneAsync(document);
+            await this.Collection.InsertOneAsync(document, cancellationToken: cancellationToken);
         }
 
-        /// <summary>
-        /// Create many new documents
-        /// </summary>
-        /// <param name="obj"></param>
+        /// <inheritdoc />
         public void Create(List<TDocument> documents)
             => this.CreateAsync(documents).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Create many new documents
-        /// </summary>
-        /// <param name="obj"></param>
-        public async Task CreateAsync(List<TDocument> documents)
+        /// <inheritdoc />
+        public async Task CreateAsync(List<TDocument> documents, CancellationToken cancellationToken = default)
         {
             if (documents == null)
             {
                 throw new ArgumentNullException(nameof(documents));
             }
 
-            await this.Collection.InsertManyAsync(documents);
+            await this.Collection.InsertManyAsync(documents, cancellationToken: cancellationToken);
         }
 
-        /// <summary>
-        /// Update one document
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool Update(TDocument document)
             => this.UpdateAsync(document).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Update one document
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
-        public async Task<bool> UpdateAsync(TDocument document)
+        /// <inheritdoc />
+        public async Task<bool> UpdateAsync(TDocument document, CancellationToken cancellationToken = default)
         {
             if (document == null)
             {
@@ -167,28 +148,18 @@ namespace Mongo.CRUD
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions() { IsUpsert = false };
+            var options = new ReplaceOptions() { IsUpsert = false };
 
-            var actionResult = await this.Collection.ReplaceOneAsync(filter, document, options);
+            var actionResult = await this.Collection.ReplaceOneAsync(filter, document, options, cancellationToken: cancellationToken);
             return actionResult.IsAcknowledged;
         }
 
-        /// <summary>
-        /// Update one or more documents partially by filter
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <param name="partialDocument"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool UpdateByQuery(FilterDefinition<TDocument> filters, object partialDocument)
             => this.UpdateByQueryAsync(filters, partialDocument).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Update one or more documents partially by filter
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <param name="partialDocument"></param>
-        /// <returns></returns>
-        public async Task<bool> UpdateByQueryAsync(FilterDefinition<TDocument> filters, object partialDocument)
+        /// <inheritdoc />
+        public async Task<bool> UpdateByQueryAsync(FilterDefinition<TDocument> filters, object partialDocument, CancellationToken cancellationToken = default)
         {
             filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
@@ -200,23 +171,15 @@ namespace Mongo.CRUD
             var updateMapped = new BsonDocument { { "$set", partialDocument.ToBsonDocument() } };
 
             var update = new BsonDocumentUpdateDefinition<TDocument>(updateMapped);
-            return (await this.Collection.UpdateManyAsync(filters, update)).IsAcknowledged;
+            return (await this.Collection.UpdateManyAsync(filters, update, cancellationToken: cancellationToken)).IsAcknowledged;
         }
 
-        /// <summary>
-        /// Update if exists or create new document
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool Upsert(TDocument document)
             => this.UpsertAsync(document).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Update if exists or create new document
-        /// </summary>
-        /// <param name="document"></param>
-        /// <returns></returns>
-        public async Task<bool> UpsertAsync(TDocument document)
+        /// <inheritdoc />
+        public async Task<bool> UpsertAsync(TDocument document, CancellationToken cancellationToken = default)
         {
             if (document == null)
             {
@@ -226,25 +189,17 @@ namespace Mongo.CRUD
             var id = this.GetDocumentId(document);
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            var options = new UpdateOptions { IsUpsert = true };
+            var options = new ReplaceOptions { IsUpsert = true };
 
-            return (await this.Collection.ReplaceOneAsync(filter, document, options)).IsAcknowledged;
+            return (await this.Collection.ReplaceOneAsync(filter, document, options, cancellationToken: cancellationToken)).IsAcknowledged;
         }
 
-        /// <summary>
-        /// Delete document by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool Delete(object id)
             => this.DeleteAsync(id).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Delete document by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<bool> DeleteAsync(object id)
+        /// <inheritdoc />
+        public async Task<bool> DeleteAsync(object id, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
@@ -252,43 +207,27 @@ namespace Mongo.CRUD
             }
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            return (await this.Collection.DeleteOneAsync(filter)).IsAcknowledged;
+            return (await this.Collection.DeleteOneAsync(filter, cancellationToken: cancellationToken)).IsAcknowledged;
         }
 
-        /// <summary>
-        /// Delete by query
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public bool DeleteByQuery(FilterDefinition<TDocument> filters)
             => this.DeleteByQueryAsync(filters).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Delete by query
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
-        public async Task<bool> DeleteByQueryAsync(FilterDefinition<TDocument> filters)
+        /// <inheritdoc />
+        public async Task<bool> DeleteByQueryAsync(FilterDefinition<TDocument> filters, CancellationToken cancellationToken = default)
         {
             filters = filters ?? FilterBuilder.GetFilterBuilder<TDocument>().Empty;
 
-            return (await this.Collection.DeleteManyAsync(filters)).IsAcknowledged;
+            return (await this.Collection.DeleteManyAsync(filters, cancellationToken: cancellationToken)).IsAcknowledged;
         }
 
-        /// <summary>
-        /// Get document by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public TDocument Get(object id)
             => this.GetAsync(id).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Get document by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<TDocument> GetAsync(object id)
+        /// <inheritdoc />
+        public async Task<TDocument> GetAsync(object id, CancellationToken cancellationToken = default)
         {
             if (id == null)
             {
@@ -296,23 +235,15 @@ namespace Mongo.CRUD
             }
 
             var filter = Builders<TDocument>.Filter.Eq("_id", id);
-            return (await this.Collection.FindAsync(filter)).FirstOrDefault();
+            return (await this.Collection.FindAsync(filter, cancellationToken: cancellationToken)).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Search documents by expression
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
             => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Search documents by expression, with paging and sorting
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <returns></returns>
-        public async Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
+        /// <inheritdoc />
+        public async Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null, CancellationToken cancellationToken = default)
         {
             if (options == null)
             {
@@ -331,11 +262,12 @@ namespace Mongo.CRUD
                 findOptions.Projection = projectionOptions.BuildProjectionByFields<TDocument>();
             }
 
-            var documents = await this.Collection.FindAsync(filters, findOptions).GetAwaiter().GetResult().ToListAsync();
+            var cursor = await this.Collection.FindAsync(filters, findOptions, cancellationToken: cancellationToken);
+            var documents = await cursor.ToListAsync(cancellationToken);
 
             var count = (documents.Count < options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
                 documents.Count :
-                await this.Collection.CountDocumentsAsync(filters);
+                await this.Collection.CountDocumentsAsync(filters, cancellationToken: cancellationToken);
 
             return new SearchResult<TDocument>
             {
@@ -344,22 +276,12 @@ namespace Mongo.CRUD
             };
         }
 
-        /// <summary>
-        /// Search documents by filters, with paging and sorting
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
             => this.SearchAsync(filters, options, projectionOptions).GetAwaiter().GetResult();
 
-        /// <summary>
-        /// Search documents by filters, with paging and sorting
-        /// </summary>
-        /// <param name="filters"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        public async Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null)
+        /// <inheritdoc />
+        public async Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null, CancellationToken cancellationToken = default)
         {
             if (options == null)
             {
@@ -380,7 +302,8 @@ namespace Mongo.CRUD
                 findOptions.Projection = projectionOptions.BuildProjectionByFields<TDocument>();
             }
 
-            var documents = await this.Collection.FindAsync(filters, findOptions).GetAwaiter().GetResult().ToListAsync();
+            var cursor = await this.Collection.FindAsync(filters, findOptions, cancellationToken: cancellationToken);
+            var documents = await cursor.ToListAsync(cancellationToken);
             
             var count = (documents.Count < options.PageSize && options.PageNumber <= 1) || !options.EnablePagination ?
                 documents.Count :

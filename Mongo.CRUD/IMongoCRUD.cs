@@ -3,6 +3,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mongo.CRUD
@@ -42,8 +43,9 @@ namespace Mongo.CRUD
         /// <summary>
         /// Create new document async
         /// </summary>
-        /// <param name="obj"></param>
-        Task CreateAsync(TDocument obj);
+        /// <param name="document"></param>
+        /// <param name="cancellationToken"></param>
+        Task CreateAsync(TDocument document, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create many new documents
@@ -54,22 +56,24 @@ namespace Mongo.CRUD
         /// <summary>
         /// Create many new documents
         /// </summary>
-        /// <param name="obj"></param>
-        Task CreateAsync(List<TDocument> objs);
+        /// <param name="documents"></param>
+        /// <param name="cancellationToken"></param>
+        Task CreateAsync(List<TDocument> documents, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update one document
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        bool Update(TDocument obj);
+        bool Update(TDocument document);
 
         /// <summary>
         /// Update one document
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="document"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> UpdateAsync(TDocument obj);
+        Task<bool> UpdateAsync(TDocument document, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update one or more documents partially by filter
@@ -84,22 +88,24 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filter"></param>
         /// <param name="partialObject"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> UpdateByQueryAsync(FilterDefinition<TDocument> filter, object partialObject);
+        Task<bool> UpdateByQueryAsync(FilterDefinition<TDocument> filter, object partialObject, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Update if exists or create new document
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="document"></param>
         /// <returns></returns>
-        bool Upsert(TDocument obj);
+        bool Upsert(TDocument document);
 
         /// <summary>
         /// Update if exists or create new document
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="document"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> UpsertAsync(TDocument obj);
+        Task<bool> UpsertAsync(TDocument document, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete document by id
@@ -112,8 +118,9 @@ namespace Mongo.CRUD
         /// Delete document by id
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> DeleteAsync(object id);
+        Task<bool> DeleteAsync(object id, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete by query
@@ -126,14 +133,16 @@ namespace Mongo.CRUD
         /// Delete by query
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<bool> DeleteByQueryAsync(FilterDefinition<TDocument> filter);
+        Task<bool> DeleteByQueryAsync(FilterDefinition<TDocument> filter, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Search documents by filters, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
         /// <param name="options"></param>
+        /// <param name="projectionOptions"></param>
         /// <returns></returns>
         SearchResult<TDocument> Search(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
 
@@ -142,8 +151,10 @@ namespace Mongo.CRUD
         /// </summary>
         /// <param name="filters"></param>
         /// <param name="options"></param>
+        /// <param name="projectionOptions"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
+        Task<SearchResult<TDocument>> SearchAsync(FilterDefinition<TDocument> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get document by id
@@ -156,14 +167,17 @@ namespace Mongo.CRUD
         /// Get document by id
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<TDocument> GetAsync(object id);
+        Task<TDocument> GetAsync(object id, CancellationToken cancellationToken = default);
 
 
         /// <summary>
         /// Search documents by expression, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
+        /// <param name="options"></param>
+        /// <param name="projectionOptions"></param>
         /// <returns></returns>
         SearchResult<TDocument> Search(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
 
@@ -172,7 +186,10 @@ namespace Mongo.CRUD
         /// Search documents by expression, with paging and sorting
         /// </summary>
         /// <param name="filters"></param>
+        /// <param name="options"></param>
+        /// <param name="projectionOptions"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null);
+        Task<SearchResult<TDocument>> SearchAsync(Expression<Func<TDocument, bool>> filters, SearchOptions options = null, ProjectionOptions projectionOptions = null, CancellationToken cancellationToken = default);
     }
 }
